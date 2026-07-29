@@ -1,4 +1,4 @@
-# Sri Lankan Student Dropout Prediction System
+# AI-Based Student Dropout and Mental Health Risk Prediction Among Sri Lankan University Students: A Machine Learning Approach
 
 This repository contains the implementation for **IT41043 – Intelligent Systems (Milestone 2)**. The project aims to predict student dropout in Sri Lanka using machine learning techniques based on cumulative GPA, household income, and mental health indicators.
 
