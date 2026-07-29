@@ -1,0 +1,95 @@
+# ============================================
+# DATA FILES (SENSITIVE - NEVER COMMIT)
+# ============================================
+data/raw/*.csv
+data/raw/*.xlsx
+data/raw/*.xls
+data/processed/*.csv
+data/processed/*.xlsx
+data/processed/*.pkl
+
+# Allow synthetic data (for testing)
+!data/synthetic/*.csv
+
+# ============================================
+# PYTHON CACHE & COMPILED FILES
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.pyc
+*.pyo
+
+# ============================================
+# VIRTUAL ENVIRONMENTS
+# ============================================
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+virtualenv/
+
+# ============================================
+# IDE & EDITOR FILES
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================
+# JUPYTER NOTEBOOKS
+# ============================================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ============================================
+# LOGS & TEMPORARY FILES
+# ============================================
+*.log
+logs/
+*.tmp
+*.temp
+*.bak
+
+# ============================================
+# MODEL CHECKPOINTS
+# ============================================
+*.pth
+*.pt
+*.h5
+*.pb
+models/checkpoints/
+checkpoints/
+
+# ============================================
+# ENVIRONMENT & SECRETS
+# ============================================
+.env
+.venv
+config/secrets.json
+*.key
+*.pem
+*.crt
+
+# ============================================
+# TEST COVERAGE
+# ============================================
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# ============================================
+# DOCUMENTATION BUILD
+# ============================================
+docs/_build/
+site/
