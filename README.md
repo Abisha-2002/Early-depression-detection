@@ -192,8 +192,7 @@ The **docs/** folder contains the project reports:
 - **Proposed_Model_Report(1).pdf**
 
 
- # This repository contains the implementation for IT41043 – Intelligent Systems (Milestone 2).
- The project develops a clinically supervised, culturally adapted machine learning approach for depression risk prediction among Sri Lankan university students.
+ # The project develops a clinically supervised, culturally adapted machine learning approach for depression risk prediction among Sri Lankan university students.
 
 ---
 
@@ -294,9 +293,20 @@ Early-depression-detection/
 └── .gitignore                                   # Excludes sensitive data
 ```
 
+## ⚡ Quick Start
+
+```bash
+# Clone and install
+git clone https://github.com/Abisha-2002/Early-depression-detection.git
+cd Early-depression-detection
+pip install -r requirements.txt
+
+# Run your first model
+python src/models/proposed_m4.py
+```
 ---
 
-## 🚀 Installation
+ ##  🚀 Installation
 
 ### Prerequisites
 - Python 3.9+
@@ -352,6 +362,8 @@ jupyter notebook
 | **McNemar's Test (α=0.05)** | Statistical significance |
 
 ---
+
+
 
 ## 🏗️ System Architecture
 
@@ -482,6 +494,14 @@ seaborn>=0.12.0
 | **Module Coordinator** | Mr. Isuru Madusanka Samarappulige |
 
 ---
+
+## 📧 Contact
+
+For any queries regarding this project:
+
+- **Wesly Jeyananthan Abisha:** [GitHub](https://github.com/Abisha-2002)
+- **Chackrawarthi Prabodha Imashi Fernando:** [GitHub](https://github.com/imashi368)
+- **Module Coordinator:** Mr. Isuru Madusanka Samarappulige
 
 ## 📝 License
 
