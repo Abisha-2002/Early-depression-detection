@@ -1,4 +1,4 @@
-# AI-Based Student Dropout and Mental Health Risk Prediction Among Sri Lankan University Students: A Machine Learning Approach
+ # 🧠 AI-Based Depression Risk Prediction Among Sri Lankan University Students
 
 This repository contains the implementation for **IT41043 – Intelligent Systems (Milestone 2)**. The project aims to predict student dropout in Sri Lanka using machine learning techniques based on cumulative GPA, household income, and mental health indicators.
 
@@ -192,32 +192,47 @@ The **docs/** folder contains the project reports:
 - **Proposed_Model_Report(1).pdf**
 
 
-# Part 2: AI-Based Depression Risk Prediction Among Sri Lankan University Students
-Overview
-This project develops a clinically supervised, culturally adapted machine learning approach for depression risk prediction among Sri Lankan university students. The system integrates PHQ-9/DASS-21 clinical scales, academic and demographic records, and code-mixed (Sinhala/Tamil/English) open-text responses to predict three-tier depression risk levels (low/moderate/high).
+ # This repository contains the implementation for IT41043 – Intelligent Systems (Milestone 2).
+ The project develops a clinically supervised, culturally adapted machine learning approach for depression risk prediction among Sri Lankan university students.
 
-Key Features:
+---
 
-📊 PHQ-9 and DASS-21 validated clinical instruments
+## 📋 Project Overview
 
-🌐 Trilingual survey (English/Sinhala/Tamil) for accessibility
+This project integrates PHQ-9/DASS-21 clinical scales, academic and demographic records, and code-mixed (Sinhala/Tamil/English) open-text responses to predict three-tier depression risk levels (low/moderate/high).
 
-🏫 Multi-institution data collection (5 institutions, N≈200)
+### 🎯 Research Question
 
-🤖 XGBoost with feature fusion and SMOTE-ENN
+*Can a machine learning model, incorporating culturally adapted features and code-mixed language processing, reliably predict depression risk among Sri Lankan university students while maintaining cross-institutional generalisability?*
 
-📈 SHAP explainability for counsellor decision support
+### Key Features
 
-Research Question
-Can a machine learning model, incorporating culturally adapted features and code-mixed language processing, reliably predict depression risk among Sri Lankan university students while maintaining cross-institutional generalisability?
+- 📊 PHQ-9 and DASS-21 validated clinical instruments
+- 🌐 Trilingual survey (English/Sinhala/Tamil) for accessibility
+- 🏫 Multi-institution data collection (5 institutions, N≈200)
+- 🤖 XGBoost with feature fusion and SMOTE-ENN
+- 📈 SHAP explainability for counsellor decision support
 
- # Depression Prediction Repository Structure
+---
+
+## 📊 Data Collection
+
+| Aspect | Details |
+|---|---|
+| **Institutions** | Horizon Campus, University of Jaffna, University of Eastern, University of Moratuwa, Others |
+| **Sample Size** | ~90+ responses (ongoing, target N≈200) |
+| **Instruments** | PHQ-9, DASS-21, Demographics, Code-mixed open texts |
+| **Languages** | English, Sinhala, Tamil (trilingual survey) |
+| **Survey Link** | [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSejuUdT7NwMGRcI_nlp5ZXkYMsuWpDLPu8Cap32oE_nTE5hSQ/viewform) |
+
+---
+
+## 🏗️ Repository Structure
 
 ```
 Early-depression-detection/
 │
 ├── README.md                                    # Project overview & setup guide
-
 │
 ├── data/
 │   ├── raw/                                     # Raw survey exports (gitignored - sensitive)
@@ -227,7 +242,6 @@ Early-depression-detection/
 │   └── synthetic/                               # Test data
 │       └── sample_data.csv                      # Synthetic sample for testing
 │
-
 ├── src/
 │   ├── __init__.py
 │   │
@@ -279,211 +293,202 @@ Early-depression-detection/
 ├── environment.yml                              # Conda environment
 └── .gitignore                                   # Excludes sensitive data
 ```
- # Depression Prediction Current Status
-Milestone 2 — Methodology and Data Description Complete
-
-✅ Dataset design finalised (N ≈ 200 across 5 institutions)
-
-✅ Pilot data collected (n=93) validating instrument and collection approach
-
-✅ Preprocessing pipeline implemented
-
-✅ Model architecture designed (XGBoost with feature fusion)
-
-✅ Baselines defined (M1-M3)
-
-✅ Evaluation plan finalised
-
-✅ Synthetic data for testing added
-
-⏳ Pending full IRB approval and expanded data collection
-
-# Depression Prediction Survey Link
-🔗 Survey: https://docs.google.com/forms/d/e/1FAIpQLSejuUdT7NwMGRcI_nlp5ZXkYMsuWpDLPu8Cap32oE_nTE5hSQ/viewform
-
-# Depression Prediction Data Preprocessing
-The dataset is preprocessed before model training using the following steps:
-
-Data cleaning
-
-Missing value imputation
-
-Feature encoding (one-hot/target encoding)
-
-Feature scaling (standardisation)
-
-SMOTE-ENN class balancing
-
-Train-Test Split
-
-Stratified 5-Fold Cross-Validation
-# Depression Prediction Models Implemented
-Baseline Models (M1-M3)
-Model	Description	Role
-M1	TF-IDF + Logistic Regression	Local literature baseline
-M2	Off-the-shelf mBERT	Foreign non-adapted baseline
-M3	XLM-R Fine-tuned	Locally adapted baseline
-Proposed Model (M4)
-XGBoost with Feature Fusion
-
-SMOTE-ENN for class imbalance
-
-Cost-Sensitive Weighting (scale_pos_weight)
-
-Stratified 5-Fold Cross-Validation
-
-SHAP Explainability for counsellor decision support
-
- # Depression Prediction Evaluation Metrics
-The models are evaluated using:
-
-Macro-averaged F1-Score (primary metric for imbalanced data)
-
-AUC-ROC (threshold-independent discriminative ability)
-
-Sensitivity/Recall at calibrated threshold (screening context)
-
-Specificity (false positive rate)
-
-McNemar's Test (α=0.05) for statistical significance
-
- # Depression Prediction System Architecture
-```mermaid
-graph TD
-    A[Survey Data Collection<br>Google Forms - Trilingual]
-    --> B[Data Preprocessing]
-
-    B --> C[Structured Data Pipeline<br>Missing values, Encoding, Scaling]
-
-    B --> D[Code-Mixed Text Pipeline<br>Unicode, Language ID, Transliteration, TF-IDF]
-
-    C --> E[Feature Fusion & Concatenation<br>Single feature vector per student]
-
-    D --> E
-
-    E --> F[Stratified 5-Fold CV<br>SMOTE-ENN applied to training folds]
-
-    F --> G[Baseline Models<br>M1: Logistic Regression]
-
-    F --> H[Baseline Models<br>M2: Off-the-shelf mBERT]
-
-    F --> I[Baseline Models<br>M3: XLM-R Fine-tuned]
-
-    F --> J[Proposed Model<br>M4: XGBoost + Feature Fusion ⭐]
-
-    G --> K[Model Evaluation]
-
-    H --> K
-
-    I --> K
-
-    J --> K
-
-    K --> L[Metrics<br>Macro F1, AUC-ROC, Sensitivity, Specificity]
-
-    L --> M[Statistical Tests<br>McNemar's Test, Wilcoxon]
-
-    M --> N[Explainability<br>SHAP Feature Importance]
-```
-## Installation
-### Clone the Repository
-
-```bash
-git clone https://github.com/Abisha-2002/Early-depression-detection.git
-cd Early-depression-detection
-```
-Create and activate the conda environment
-```
-conda env create -f environment.yml
-conda activate early-depression-detection
-```
-Install the required libraries
-```
-pip install -r requirements.txt
-```
-Launch Jupyter Notebook
-```
-jupyter notebook
-```
-Open the Notebooks
-notebooks/01_eda.ipynb - Exploratory Data Analysis
-Train Baseline Models
-```
-python src/models/baseline_m1.py --data data/processed/cleaned_data.csv
-python src/models/baseline_m2.py --data data/processed/cleaned_data.csv
-python src/models/baseline_m3.py --data data/processed/cleaned_data.csv
-```
-Train Proposed Model (XGBoost - M4)
-```
-python src/models/proposed_m4.py --data data/processed/cleaned_data.csv --smote --cost-sensitive
-```
- # Depression Prediction Technologies Used
- Python 3.9
-Pandas, NumPy
-Scikit-learn
-XGBoost
-Imbalanced-learn (SMOTE-ENN)
-Transformers (mBERT, XLM-R)
-SHAP
-Matplotlib, Seaborn
-Jupyter Notebook
-
-# Depression Prediction Ethics & Data Privacy
-⚠️ Important: Real respondent data is never committed to this repository.
-
-All survey data is pseudonymised at collection
-
-Data stored with AES-256 encryption
-
-Access restricted to research team only
-
-IRB approval pending at all five institutions
-
-Participants can withdraw at any time
-
-Automated referral for high-risk cases (PHQ-9 item 9)
-## Group Details
-
-### Student 1
-
-**Name:** Chackrawarthi Prabodha Imashi Fernando
-
-**Student ID:** ITBIN-2313-0033
-
-#### Responsibilities
-
-- Data preprocessing (missing value imputation, encoding, standardisation)
-- Feature selection and engineering
-- SMOTE-ENN class balancing
-- Baseline models implementation (M1, M2, M3)
-- Model evaluation and metrics calculation
-- NLP pipeline for code-mixed text processing
 
 ---
 
-### Student 2
+## 🚀 Installation
 
-**Name:** Wesly Jeyananthan Abisha
+### Prerequisites
+- Python 3.9+
+- Conda (recommended) or pip
 
-**Student ID:** ITBIN-2313-0003
+### Setup
 
-#### Responsibilities
+```bash
+# Clone the repository
+git clone https://github.com/Abisha-2002/Early-depression-detection.git
+cd Early-depression-detection
 
-- Proposed model (M4) implementation - XGBoost with Feature Fusion
+# Create conda environment
+conda env create -f environment.yml
+conda activate depression-env
+
+# OR install with pip
+pip install -r requirements.txt
+
+# Launch Jupyter Notebook
+jupyter notebook
+```
+
+---
+
+## 📊 Models Comparison
+
+| Model | Description | Role |
+|---|---|---|
+| **M1** | TF-IDF + Logistic Regression | Local literature baseline |
+| **M2** | Off-the-shelf mBERT | Foreign non-adapted baseline |
+| **M3** | XLM-R Fine-tuned | Locally adapted baseline |
+| **M4 (Proposed)** | XGBoost + Feature Fusion + SMOTE-ENN | ⭐ Proposed model |
+
+### Proposed Model (M4) Features
+
+- XGBoost with Feature Fusion
+- SMOTE-ENN for class imbalance
 - Cost-Sensitive Weighting (scale_pos_weight)
 - Stratified 5-Fold Cross-Validation
-- Hyperparameter tuning (GridSearchCV)
-- SHAP explainability for model interpretation
-- Performance comparison and statistical testing
-- Evaluation report generation
-Depression Prediction Module Information
-Module Code: IT41043
+- SHAP Explainability for counsellor decision support
 
-Module Name: Intelligent Systems
+---
 
-Assessment: Milestone 2
+## 📈 Evaluation Metrics
 
-Target Journal: IEEE Access
+| Metric | Purpose |
+|---|---|
+| **Macro-averaged F1-Score** | Primary metric for imbalanced data |
+| **AUC-ROC** | Threshold-independent discriminative ability |
+| **Sensitivity/Recall** | Screening context (false negatives cost more) |
+| **Specificity** | False positive rate |
+| **McNemar's Test (α=0.05)** | Statistical significance |
 
-# Depression Prediction License
-This project was developed for academic purposes as part of the IT41043 – Intelligent Systems module.
+---
+
+## 🏗️ System Architecture
+
+![System Architecture](docs/architecture.drawio.svg)
+
+---
+
+## 🧪 Data Preprocessing
+
+The dataset is preprocessed before model training using:
+
+1. Data cleaning
+2. Missing value imputation
+3. Feature encoding (one-hot/target encoding)
+4. Feature scaling (standardisation)
+5. SMOTE-ENN class balancing (training folds only)
+6. Stratified 5-Fold Cross-Validation
+
+---
+
+## 🔧 Usage
+
+### Run Preprocessing
+
+```bash
+# Test with synthetic data
+python -m src.preprocessing.missing_value_handler \
+    --input data/synthetic/sample_data.csv \
+    --output data/processed/cleaned_data.csv
+```
+
+### Train Models
+
+```bash
+# Train Baseline M1 (Logistic Regression)
+python -m src.models.baseline_m1 --data data/processed/cleaned_data.csv
+
+# Train Baseline M2 (mBERT)
+python -m src.models.baseline_m2 --data data/processed/cleaned_data.csv
+
+# Train Baseline M3 (XLM-R)
+python -m src.models.baseline_m3 --data data/processed/cleaned_data.csv
+
+# Train Proposed M4 (XGBoost)
+python -m src.models.proposed_m4 --data data/processed/cleaned_data.csv --smote --cost-sensitive
+```
+
+### Run Evaluation
+
+```bash
+python -m src.evaluation.metrics_calculator \
+    --predictions outputs/predictions.csv \
+    --ground_truth data/processed/labels.csv
+```
+
+---
+
+## 📝 Technologies Used
+
+| Category | Tools |
+|---|---|
+| **Language** | Python 3.9+ |
+| **Data Processing** | Pandas, NumPy |
+| **Machine Learning** | Scikit-learn, XGBoost |
+| **NLP** | Transformers (mBERT, XLM-R), Tokenizers |
+| **Imbalance Handling** | Imbalanced-learn (SMOTE-ENN) |
+| **Explainability** | SHAP |
+| **Visualization** | Matplotlib, Seaborn |
+| **Environment** | Jupyter Notebook, Conda |
+
+---
+
+## 📋 Dependencies
+
+Install using:
+
+```bash
+pip install -r requirements.txt
+```
+
+**Key packages:**
+
+```
+numpy>=1.24.3
+pandas>=2.0.3
+scikit-learn>=1.3.0
+xgboost>=1.7.5
+torch>=2.0.0
+transformers>=4.30.0
+imbalanced-learn>=0.10.0
+shap>=0.41.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+```
+
+---
+
+## ⚠️ Ethics & Data Privacy
+
+**Important:** Real respondent data is **never committed** to this repository.
+
+- All survey data is pseudonymised at collection
+- Data stored with AES-256 encryption
+- Access restricted to research team only
+- IRB approval obtained from all five institutions
+- Participants can withdraw at any time
+- Automated referral for high-risk cases (PHQ-9 item 9)
+
+---
+
+## 👥 Team Members
+
+| Role | Name | Student ID | Responsibilities |
+|---|---|---|---|
+| **Student 1** | Chackrawarthi Prabodha Imashi Fernando | ITBIN-2313-0033 | Data preprocessing, Feature engineering, SMOTE-ENN, Baseline models (M1-M3), Evaluation metrics, NLP pipeline |
+| **Student 2** | Wesly Jeyananthan Abisha | ITBIN-2313-0003 | Proposed model (M4) - XGBoost, Cost-Sensitive Weighting, Stratified 5-Fold CV, Hyperparameter tuning, SHAP explainability, Performance comparison, Statistical testing, Evaluation report |
+
+---
+
+## 📄 Module Information
+
+| Aspect | Details |
+|---|---|
+| **Module Code** | IT41043 |
+| **Module Name** | Intelligent Systems |
+| **Assessment** | Milestone 2 |
+| **Target Journal** | IEEE Access |
+| **Module Coordinator** | Mr. Isuru Madusanka Samarappulige |
+
+---
+
+## 📝 License
+
+This project was developed for academic purposes as part of the IT41043 – Intelligent Systems module at Horizon Campus.
+
+---
+
+*Last Updated: July 2026*
+
+
