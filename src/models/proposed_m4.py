@@ -53,28 +53,19 @@ class ProposedM4:
         else:
             X_resampled, y_resampled = X_scaled, y
         
-        # Calculate scale_pos_weight for imbalanced data
+        # Multi-class classification info
         unique_classes = np.unique(y_resampled)
-        if len(unique_classes) == 2:
-            n_neg = np.sum(y_resampled == 0)
-            n_pos = np.sum(y_resampled == 1)
-            scale_pos_weight = n_neg / n_pos if n_pos > 0 else 1.0
-            print(f"⚖️ Cost-Sensitive Weight (scale_pos_weight): {scale_pos_weight:.2f}")
-        else:
-            scale_pos_weight = 1.0
-            print(f"⚖️ Multi-class classification (3 risk tiers). scale_pos_weight = 1.0")
+        print(f"⚖️ Multi-class classification ({len(unique_classes)} classes).")
         
-        # Initialize XGBoost with cost-sensitive weighting
+        # Initialize XGBoost (clean - no warnings)
         self.model = xgb.XGBClassifier(
             max_depth=5,
             learning_rate=0.1,
             n_estimators=200,
             subsample=0.8,
             colsample_bytree=0.8,
-            scale_pos_weight=scale_pos_weight,
             random_state=self.random_state,
-            eval_metric='mlogloss',
-            use_label_encoder=False
+            eval_metric='mlogloss'
         )
         
         # Perform Stratified 5-Fold CV
@@ -97,22 +88,23 @@ class ProposedM4:
             X_train, X_val = X_resampled[train_idx], X_resampled[val_idx]
             y_train, y_val = y_resampled[train_idx], y_resampled[val_idx]
             
+            # Train on this fold (clean - no warnings)
             fold_model = xgb.XGBClassifier(
                 max_depth=5,
                 learning_rate=0.1,
                 n_estimators=200,
                 subsample=0.8,
                 colsample_bytree=0.8,
-                scale_pos_weight=scale_pos_weight,
                 random_state=self.random_state,
-                eval_metric='mlogloss',
-                use_label_encoder=False
+                eval_metric='mlogloss'
             )
             fold_model.fit(X_train, y_train)
             
+            # Predict
             y_pred = fold_model.predict(X_val)
             y_proba = fold_model.predict_proba(X_val)
             
+            # Store metrics
             self.cv_results['accuracy'].append(accuracy_score(y_val, y_pred))
             self.cv_results['precision'].append(precision_score(y_val, y_pred, average='weighted'))
             self.cv_results['recall'].append(recall_score(y_val, y_pred, average='weighted'))
@@ -130,6 +122,7 @@ class ProposedM4:
                   f"F1: {self.cv_results['f1'][-1]:.4f}")
             fold += 1
         
+        # Train final model on ALL training data
         self.model.fit(X_resampled, y_resampled)
         self.feature_importance = self.model.feature_importances_
         
@@ -196,8 +189,7 @@ class ProposedM4:
         grid_search = GridSearchCV(
             xgb.XGBClassifier(
                 random_state=self.random_state,
-                eval_metric='mlogloss',
-                use_label_encoder=False
+                eval_metric='mlogloss'
             ),
             param_grid,
             cv=5,
@@ -218,6 +210,42 @@ class ProposedM4:
         print(f"\nBest CV Score: {grid_search.best_score_:.4f}")
         
         return self.best_params
+    
+    def plot_feature_importance(self, feature_names=None, top_n=10):
+        """Plot feature importance from XGBoost"""
+        if self.feature_importance is None:
+            print("⚠️ No feature importance available. Train the model first.")
+            return
+        
+        if feature_names is None:
+            feature_names = [f'Feature_{i}' for i in range(len(self.feature_importance))]
+        
+        importance_df = pd.DataFrame({
+            'feature': feature_names,
+            'importance': self.feature_importance
+        }).sort_values('importance', ascending=False)
+        
+        plt.figure(figsize=(10, 6))
+        top_features = importance_df.head(top_n)
+        plt.barh(top_features['feature'], top_features['importance'])
+        plt.xlabel('Importance')
+        plt.title(f'Top {top_n} Feature Importances (XGBoost)')
+        plt.gca().invert_yaxis()
+        plt.tight_layout()
+        plt.show()
+        
+        return importance_df
+    
+    def plot_confusion_matrix(self, y_true, y_pred, title="Confusion Matrix"):
+        """Plot confusion matrix"""
+        cm = confusion_matrix(y_true, y_pred)
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+        plt.title(title)
+        plt.xlabel('Predicted')
+        plt.ylabel('Actual')
+        plt.tight_layout()
+        plt.show()
     
     def compare_with_baseline(self, baseline_metrics):
         """Compare XGBoost performance with baseline models"""
@@ -245,6 +273,10 @@ class ProposedM4:
             print(f"XGBoost (M4) Mean Accuracy: {comparison['cv_mean_accuracy']:.4f}")
             print(f"Baseline Accuracy:           {comparison['baseline_accuracy']:.4f}")
             print(f"Improvement:                 {comparison['improvement_accuracy']:.4f}")
+            print("-"*50)
+            print(f"XGBoost (M4) Mean F1:        {comparison['cv_mean_f1']:.4f}")
+            print(f"Baseline F1:                 {comparison['baseline_f1']:.4f}")
+            print(f"Improvement:                 {comparison['improvement_f1']:.4f}")
         
         return comparison
 
@@ -260,12 +292,13 @@ if __name__ == "__main__":
     print("Student: Wesly Jeyananthan Abisha (ITBIN-2313-0003)")
     print("="*70)
     
+    # Generate sample data (simulating PHQ-9 features + demographics + NLP)
     X, y = make_classification(
         n_samples=200, 
         n_features=15, 
         n_informative=10,
         n_redundant=2,
-        n_classes=3,
+        n_classes=3,  # Low/Moderate/High risk
         random_state=42
     )
     
@@ -281,3 +314,5 @@ if __name__ == "__main__":
     print("="*70)
     print(f"📈 Mean Accuracy:  {np.mean(cv_results['accuracy']):.4f} (±{np.std(cv_results['accuracy']):.4f})")
     print(f"📈 Mean F1-Score:   {np.mean(cv_results['f1']):.4f} (±{np.std(cv_results['f1']):.4f})")
+    print(f"📈 Mean Precision: {np.mean(cv_results['precision']):.4f}")
+    print(f"📈 Mean Recall:    {np.mean(cv_results['recall']):.4f}")
