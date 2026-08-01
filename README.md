@@ -1,6 +1,15 @@
  # 🧠 AI-Based Depression Risk Prediction Among Sri Lankan University Students
 
-This repository contains the implementation for **IT41043 – Intelligent Systems (Milestone 2)**. The project aims to predict student dropout in Sri Lanka using machine learning techniques based on cumulative GPA, household income, and mental health indicators.
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
+![License](https://img.shields.io/badge/License-Academic-green)
+![Status](https://img.shields.io/badge/Status-Milestone%202-yellow)
+![Contributors](https://img.shields.io/badge/Contributors-2-orange)
+
+This repository contains the implementation for **IT41043 – Intelligent Systems (Milestone 2)**.
+
+## Student 1  Chackrawarthi Prabodha Imashi Fernando  ITBIN-2313-0033 
+
+The project aims to predict student dropout in Sri Lanka using machine learning techniques based on cumulative GPA, household income, and mental health indicators.
 
 ---
 
@@ -193,8 +202,7 @@ The **docs/** folder contains the project reports:
 
 
  # The project develops a clinically supervised, culturally adapted machine learning approach for depression risk prediction among Sri Lankan university students.
-
----
+## Student  Wesly Jeyananthan Abisha ITBIN-2313-0003  
 
 ## 📋 Project Overview
 
@@ -370,6 +378,59 @@ jupyter notebook
 ![System Architecture](docs/architecture.drawio.svg)
 
 ---
+## 📊 Results
+
+### Random Forest Model (Comparison)
+
+| Fold | Accuracy | F1-Score |
+|---|---|---|
+| Fold 1 | 83.33% | 83.15% |
+| Fold 2 | 77.78% | 77.41% |
+| Fold 3 | 77.78% | 76.42% |
+| Fold 4 | 88.24% | 88.24% |
+| Fold 5 | 76.47% | 75.49% |
+
+**Cross-Validation Summary:**
+
+| Metric | Value |
+|---|---|
+| **Mean Accuracy** | **80.72%** (±4.44%) |
+| **Mean F1-Score** | **80.14%** (±4.85%) |
+
+---
+
+### Proposed Model (M4 - XGBoost)
+
+| Fold | Accuracy | F1-Score |
+|---|---|---|
+| Fold 1 | 77.78% | 76.48% |
+| Fold 2 | 83.33% | 82.71% |
+| Fold 3 | 83.33% | 81.23% |
+| Fold 4 | 76.47% | 75.89% |
+| Fold 5 | 70.59% | 68.36% |
+
+**Cross-Validation Summary:**
+
+| Metric | Value |
+|---|---|
+| **Mean Accuracy** | **78.30%** (±4.77%) |
+| **Mean F1-Score** | **76.93%** (±5.03%) |
+| **Mean Precision** | **81.57%** |
+| **Mean Recall** | **78.30%** |
+
+---
+
+### Model Comparison
+
+| Model | Accuracy | F1-Score |
+|---|---|---|
+| M1 (Baseline - Logistic Regression) | TBD | 0.6860 |
+| **M4 (XGBoost - Proposed)** | **78.30%** | **76.93%** |
+| **Random Forest (Comparison)** | **80.72%** | **80.14%** |
+
+**Key Finding:** Random Forest currently performs best on synthetic data, while XGBoost (M4) demonstrates the effectiveness of feature fusion, SMOTE-ENN, and cost-sensitive weighting. The proposed model achieves a **12.1% improvement** over the baseline Logistic Regression model.
+
+---
 
 ## 🧪 Data Preprocessing
 
@@ -478,7 +539,7 @@ seaborn>=0.12.0
 
 | Role | Name | Student ID | Responsibilities |
 |---|---|---|---|
-| **Student 1** | Chackrawarthi Prabodha Imashi Fernando | ITBIN-2313-0033 | Data preprocessing, Feature engineering, SMOTE-ENN, Baseline models (M1-M3), Evaluation metrics, NLP pipeline |
+| **Student 1** | Chackrawarthi Prabodha Imashi Fernando | ITBIN-2313-0033 | Data prepr engineering, SMOTE-ENN, Baseline models (M1-M3), Evaluation metrics, NLP pipeline |
 | **Student 2** | Wesly Jeyananthan Abisha | ITBIN-2313-0003 | Proposed model (M4) - XGBoost, Cost-Sensitive Weighting, Stratified 5-Fold CV, Hyperparameter tuning, SHAP explainability, Performance comparison, Statistical testing, Evaluation report |
 
 ---
