@@ -93,3 +93,24 @@ htmlcov/
 # ============================================
 docs/_build/
 site/
+# ============================================
+# VIRTUAL ENVIRONMENTS
+# ============================================
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+virtualenv/
+# ============================================
+# VIRTUAL ENVIRONMENTS
+# ============================================
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+virtualenv/
+depression-env/          # ← ADD THIS LINE
