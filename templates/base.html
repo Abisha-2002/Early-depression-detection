@@ -4,14 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}MindAssist - Depression Risk Prediction{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>{% block title %}MindAssist - AI Mental Health Companion{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
+        /* ===== ROOT VARIABLES ===== */
+        
+         :root {
             --primary: #4F46E5;
             --primary-dark: #4338CA;
             --primary-light: #818CF8;
+            --primary-gradient: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
             --secondary: #7C3AED;
             --success: #10B981;
             --warning: #F59E0B;
@@ -20,140 +23,243 @@
             --gray: #6B7280;
             --light-gray: #F3F4F6;
             --white: #FFFFFF;
-            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.15);
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 60px rgba(79, 70, 229, 0.15);
             --radius: 16px;
+            --radius-sm: 8px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
+        /* ===== RESET ===== */
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 50%, #C7D2FE 100%);
+            background: #F8FAFC;
             min-height: 100vh;
             color: var(--dark);
             line-height: 1.6;
         }
-
-        /* Navbar */
+        /* ===== NAVBAR ===== */
+        
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.97);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             padding: 0 2rem;
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
         }
-
+        
         .nav-container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 70px;
+            height: 72px;
         }
-
+        
         .nav-logo {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: var(--primary);
             text-decoration: none;
             transition: var(--transition);
         }
-
+        
         .nav-logo:hover {
             transform: scale(1.02);
         }
-
+        
         .logo-icon {
-            font-size: 2rem;
+            font-size: 1.8rem;
         }
-
+        
         .logo-text {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
+        
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 0.5rem;
             list-style: none;
             align-items: center;
         }
-
+        
         .nav-links a {
             text-decoration: none;
             color: var(--gray);
             font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
             transition: var(--transition);
             position: relative;
-            padding: 0.5rem 0;
         }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: var(--transition);
-        }
-
+        
         .nav-links a:hover {
             color: var(--primary);
+            background: rgba(79, 70, 229, 0.08);
         }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
+        
         .nav-links a.active {
             color: var(--primary);
             font-weight: 600;
+            background: rgba(79, 70, 229, 0.1);
         }
-
-        .nav-links a.active::after {
-            width: 100%;
+        
+        .nav-cta {
+            background: var(--primary-gradient) !important;
+            color: var(--white) !important;
+            padding: 0.5rem 1.5rem !important;
+            border-radius: 50px !important;
+            font-weight: 600 !important;
+            -webkit-text-fill-color: white !important;
         }
-
-        /* Main Container */
+        
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+            background: var(--primary-gradient) !important;
+        }
+        /* ===== MOBILE MENU ===== */
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        /* ===== MAIN CONTAINER ===== */
+        
         .main-container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 2rem;
-            min-height: calc(100vh - 200px);
+            padding: 2rem 1.5rem;
+            min-height: calc(100vh - 250px);
         }
-
-        /* Cards */
+        /* ===== HERO SECTION ===== */
+        
+        .hero {
+            background: var(--primary-gradient);
+            border-radius: var(--radius);
+            padding: 4rem 3rem;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 550px;
+        }
+        
+        .hero .btn-primary {
+            background: var(--white);
+            color: var(--primary);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .hero .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        /* ===== CARDS ===== */
+        
         .card {
             background: var(--white);
             border-radius: var(--radius);
             padding: 2rem;
             box-shadow: var(--shadow);
             transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.04);
         }
-
+        
         .card:hover {
             box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
         }
-
-        /* Buttons */
+        
+        .card-gradient {
+            background: var(--primary-gradient);
+            color: var(--white);
+            border: none;
+        }
+        
+        .card-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+        /* ===== BUTTONS ===== */
+        
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary-gradient);
             color: var(--white);
             border: none;
             padding: 0.75rem 2rem;
@@ -165,13 +271,14 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            text-decoration: none;
         }
-
+        
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(79, 70, 229, 0.3);
         }
-
+        
         .btn-secondary {
             background: var(--light-gray);
             color: var(--dark);
@@ -181,153 +288,196 @@
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-
+        
         .btn-secondary:hover {
             background: #E5E7EB;
             transform: translateY(-2px);
         }
-
-        /* Footer */
-        .footer {
-            background: var(--white);
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            padding: 2rem;
-            text-align: center;
-            color: var(--gray);
-            font-size: 0.875rem;
-            margin-top: 2rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .footer-social a {
-            color: var(--gray);
-            font-size: 1.5rem;
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
             transition: var(--transition);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
         }
-
-        .footer-social a:hover {
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--white);
+            transform: translateY(-2px);
+        }
+        /* ===== STATS ===== */
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
             color: var(--primary);
-            transform: translateY(-3px);
         }
-
-        .footer-social a .fa-linkedin:hover {
-            color: #0077B5;
-        }
-
-        .footer-social a .fa-github:hover {
-            color: #333;
-        }
-
-        .footer-social a .fa-facebook:hover {
-            color: #1877F2;
-        }
-
-        .footer-text {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .footer-text .brand {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .footer-text .student {
+        
+        .stat-label {
             color: var(--gray);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
         }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 0 1rem;
-            }
-
-            .nav-container {
-                flex-direction: column;
-                height: auto;
-                padding: 1rem 0;
-                gap: 1rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .main-container {
-                padding: 1rem;
-            }
-
-            .footer-social {
-                gap: 1rem;
-            }
-
-            .footer-social a {
-                font-size: 1.2rem;
-            }
+        /* ===== GRID ===== */
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
         }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
         }
-
-        .fade-in {
-            animation: fadeInUp 0.6s ease-out;
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
         }
-
-        /* Loading */
-        .loader {
-            display: none;
-            border: 4px solid var(--light-gray);
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
+        /* ===== QUESTION CARD ===== */
+        
+        .question-card {
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.75rem;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+        
+        .question-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+        }
+        
+        .question-card:has(input:checked) {
+            border-color: var(--primary);
+            background: #EEF2FF;
+        }
+        /* ===== FOOTER ===== */
+        
+        .footer {
+            background: var(--white);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 3rem 2rem 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .footer-brand h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-brand p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            max-width: 300px;
+        }
+        
+        .footer-links h4 {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+        }
+        
+        .footer-links a {
+            display: block;
+            color: var(--gray);
+            text-decoration: none;
+            padding: 0.25rem 0;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .footer-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             width: 40px;
             height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
+            border-radius: 50%;
+            background: var(--light-gray);
+            color: var(--gray);
+            transition: var(--transition);
+            text-decoration: none;
+            font-size: 1.2rem;
         }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+        
+        .footer-social a:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: translateY(-3px);
         }
-
-        /* Toast notifications */
+        
+        .footer-bottom {
+            max-width: 1280px;
+            margin: 2rem auto 0;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+        /* ===== TOAST ===== */
+        
         .toast {
             position: fixed;
             bottom: 2rem;
@@ -343,121 +493,334 @@
             z-index: 9999;
             max-width: 400px;
         }
-
+        
         .toast.show {
             transform: translateY(0);
             opacity: 1;
         }
-
+        
         .toast.success {
             background: var(--success);
         }
-
+        
         .toast.error {
             background: var(--danger);
         }
-
-        /* Question card hover */
-        .question-card:hover {
-            border-color: var(--primary-light) !important;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+        
+        .toast.warning {
+            background: var(--warning);
         }
-
-        .question-card:has(input:checked) {
-            border-color: var(--primary) !important;
-            background: #EEF2FF !important;
+        /* ===== RESPONSIVE ===== */
+        
+        @media (max-width: 1024px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
         }
-
-        /* Stats cards */
-        .stat-card {
-            transition: var(--transition);
+        
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 1rem;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding: 1rem 0;
+                gap: 0.25rem;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .nav-container {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 0.75rem 0;
+            }
+            .hero {
+                padding: 2rem 1.5rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .main-container {
+                padding: 1rem;
+            }
+            .card {
+                padding: 1.25rem;
+            }
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .footer-brand p {
+                max-width: 100%;
+            }
+            .footer-social {
+                justify-content: center;
+            }
         }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .stat-number {
+                font-size: 1.8rem;
+            }
+        }
+        /* ===== UTILITIES ===== */
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .text-primary {
+            color: var(--primary);
+        }
+        
+        .text-gray {
+            color: var(--gray);
+        }
+        
+        .mt-1 {
+            margin-top: 1rem;
+        }
+        
+        .mt-2 {
+            margin-top: 2rem;
+        }
+        
+        .mb-1 {
+            margin-bottom: 1rem;
+        }
+        
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+        
+        .gap-1 {
+            gap: 1rem;
+        }
+        
+        .flex {
+            display: flex;
+        }
+        
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        /* ===== ANIMATIONS ===== */
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
         }
     </style>
 </head>
 
 <body>
+
+    <!-- ===== NAVBAR ===== -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="nav-logo">
                 <span class="logo-icon">🧠</span>
                 <span class="logo-text">MindAssist</span>
             </a>
-            <ul class="nav-links">
+
+            <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <ul class="nav-links" id="navLinks">
                 <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
-                <li><a href="/text-analysis" class="{% if request.path == '/text-analysis' %}active{% endif %}">Text Analysis</a></li>
                 <li><a href="/about" class="{% if request.path == '/about' %}active{% endif %}">About</a></li>
                 <li><a href="/contact" class="{% if request.path == '/contact' %}active{% endif %}">Contact</a></li>
+                <li><a href="/text-analysis" class="{% if request.path == '/text-analysis' %}active{% endif %}">Text Analysis</a></li>
+                <li><a href="/" class="nav-cta">Take Test <i class="fas fa-arrow-right"></i></a></li>
             </ul>
         </div>
     </nav>
 
+    <!-- ===== MAIN CONTENT ===== -->
     <main class="main-container fade-in">
         {% block content %}{% endblock %}
     </main>
 
+    <!-- ===== FOOTER ===== -->
     <footer class="footer">
         <div class="footer-content">
-            <div class="footer-social">
-                <a href="https://www.linkedin.com/in/abisha-wesly-jeyananthan-2a05a32b8" target="_blank" title="LinkedIn">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-                <a href="https://github.com/Abisha-2002" target="_blank" title="GitHub">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="https://www.facebook.com/share/18ntpCvmjK" target="_blank" title="Facebook">
-                    <i class="fab fa-facebook"></i>
-                </a>
+            <div class="footer-brand">
+                <h3>🧠 MindAssist</h3>
+                <p>AI-powered depression risk prediction using PHQ-9 screening. Evidence-based mental health support for everyone.</p>
+                <div class="footer-social">
+                    <a href="https://www.linkedin.com/in/abisha-wesly-jeyananthan-2a05a32b8" target="_blank" title="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://github.com/Abisha-2002" target="_blank" title="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.facebook.com/share/18ntpCvmjK" target="_blank" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="mailto:shaabis71@gmail.com" title="Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
             </div>
-            <div class="footer-text">
-                <p>© {{ year }} <span class="brand">MindAssist</span> | Horizon Campus | Faculty of Information Technology</p>
-                <p class="student">Developed by: Wesly Jeyananthan Abisha</p>
-                <p style="margin-top: 0.25rem; font-size: 0.75rem; color: var(--gray);">
-                    For educational purposes only. Not a substitute for professional medical advice.
-                </p>
+
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="/">Home</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+                <a href="/text-analysis">Text Analysis</a>
             </div>
+
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <a href="https://www.who.int/health-topics/mental-health" target="_blank">WHO Mental Health</a>
+                <a href="https://www.nimh.nih.gov/health/topics/depression" target="_blank">NIMH Depression</a>
+                <a href="https://www.mentalhealth.gov/" target="_blank">MentalHealth.gov</a>
+                <a href="https://www.cdc.gov/mentalhealth/" target="_blank">CDC Mental Health</a>
+            </div>
+
+            <div class="footer-links">
+                <h4>Emergency</h4>
+                <a href="tel:119"><strong>Police:</strong> 119</a>
+                <a href="tel:1926"><strong>Mental Health:</strong> 1926</a>
+                <a href="tel:+94112686688"><strong>Sumithrayo:</strong> +94 11 268 6688</a>
+                <a href="tel:1929"><strong>Child Protection:</strong> 1929</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© {{ year }} <strong>MindAssist</strong> | Horizon Campus | Faculty of Information Technology</p>
+            <p style="margin-top: 0.25rem; font-size: 0.8rem; color: var(--gray);">
+                Developed by: <strong>Wesly Jeyananthan Abisha</strong>
+            </p>
+            <p style="margin-top: 0.25rem; font-size: 0.75rem; color: var(--gray);">
+                <i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i> For educational purposes only. Not a substitute for professional medical advice.
+            </p>
         </div>
     </footer>
 
+    <!-- ===== TOAST ===== -->
     <div id="toast" class="toast"></div>
 
+    <!-- ===== SCRIPTS ===== -->
     <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            var navLinks = document.getElementById('navLinks');
+            if (navLinks) {
+                navLinks.classList.toggle('open');
+            }
+        }
+
+        // Close menu on link click (mobile)
+        document.querySelectorAll('.nav-links a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                var navLinks = document.getElementById('navLinks');
+                if (window.innerWidth <= 768 && navLinks) {
+                    navLinks.classList.remove('open');
+                }
+            });
+        });
+
         // Toast notification
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
+        function showToast(message, type) {
+            type = type || 'info';
+            var toast = document.getElementById('toast');
+            if (!toast) return;
+
             toast.textContent = message;
             toast.className = 'toast';
-            if (type === 'success') toast.classList.add('success');
-            if (type === 'error') toast.classList.add('error');
+
+            if (type === 'success') {
+                toast.classList.add('success');
+            } else if (type === 'error') {
+                toast.classList.add('error');
+            } else if (type === 'warning') {
+                toast.classList.add('warning');
+            }
+
             toast.classList.add('show');
-            setTimeout(() => {
+
+            setTimeout(function() {
                 toast.classList.remove('show');
-            }, 3000);
+            }, 4000);
         }
 
         // Auto-dismiss flash messages
         document.addEventListener('DOMContentLoaded', function() {
-            const flashMessages = document.querySelectorAll('.flash-message');
-            flashMessages.forEach(msg => {
-                setTimeout(() => {
+            var flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(msg) {
+                setTimeout(function() {
                     msg.style.opacity = '0';
-                    setTimeout(() => msg.remove(), 300);
+                    setTimeout(function() {
+                        msg.remove();
+                    }, 300);
                 }, 3000);
             });
+        });
 
-            // Question card highlight on select
-            document.querySelectorAll('.question-card input[type="radio"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    const card = this.closest('.question-card');
-                    card.style.borderColor = 'var(--primary)';
-                    card.style.background = '#EEF2FF';
-                });
-            });
+        // Show welcome toast on home page only
+        document.addEventListener('DOMContentLoaded', function() {
+            var currentPath = window.location.pathname;
+            if (currentPath === '/' || currentPath === '') {
+                setTimeout(function() {
+                    showToast('🧠 Welcome to MindAssist! Take the PHQ-9 test to check your mental health.', 'info');
+                }, 1000);
+            }
         });
     </script>
+
+    {% block scripts %}{% endblock %}
 </body>
 
 </html>

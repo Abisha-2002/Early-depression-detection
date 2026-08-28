@@ -44,6 +44,31 @@ PHQ9_DATA = [
     {"id": 9, "question": "Thoughts that you would be better off dead, or of hurting yourself?", "category": "Suicidality"}
 ]
 
+# University Options
+UNIVERSITY_OPTIONS = [
+    {"value": "horizon", "label": "Horizon Campus"},
+    {"value": "jaffna", "label": "University of Jaffna"},
+    {"value": "moratuwa", "label": "University of Moratuwa"},
+    {"value": "eastern", "label": "University of Eastern"},
+    {"value": "other", "label": "Other"}
+]
+
+# Year of Study Options
+YEAR_OPTIONS = [
+    {"value": "1", "label": "First Year"},
+    {"value": "2", "label": "Second Year"},
+    {"value": "3", "label": "Third Year"},
+    {"value": "4", "label": "Fourth Year"},
+    {"value": "other", "label": "Other"}
+]
+
+# Gender Options
+GENDER_OPTIONS = [
+    {"value": "0", "label": "Prefer not to say"},
+    {"value": "1", "label": "Male"},
+    {"value": "2", "label": "Female"}
+]
+
 # Load models
 models = {}
 model_metadata = {}
@@ -72,6 +97,7 @@ def load_models():
 def process_text(text):
     """Process code-mixed text through NLP pipeline"""
     if not NLP_AVAILABLE:
+        # Fallback: Just split by spaces and tag as unknown
         return {
             'original': text,
             'normalized': text,
@@ -80,34 +106,45 @@ def process_text(text):
             'features': None
         }
     
-    # Step 1: Normalize Unicode
-    normalized = normalizer.normalize(text)
-    
-    # Step 2: Identify languages
-    tokens = language_identifier.identify_tokens(normalized)
-    
-    # Step 3: Transliterate if needed
-    transliterated = []
-    for token, lang in tokens:
-        if lang == 'sinhala':
-            transliterated.append(transliterator.sinhala_to_roman(token))
-        elif lang == 'tamil':
-            transliterated.append(transliterator.tamil_to_roman(token))
-        else:
-            transliterated.append(token)
-    
-    processed_text = ' '.join(transliterated)
-    
-    # Step 4: Extract features
-    features = feature_extractor.extract_features([processed_text]) if processed_text else None
-    
-    return {
-        'original': text,
-        'normalized': normalized,
-        'tokens': tokens,
-        'transliterated': processed_text,
-        'features': features
-    }
+    try:
+        # Step 1: Normalize Unicode
+        normalized = normalizer.normalize(text)
+        
+        # Step 2: Identify languages
+        tokens = language_identifier.identify_tokens(normalized)
+        
+        # Step 3: Transliterate if needed
+        transliterated = []
+        for token, lang in tokens:
+            if lang == 'sinhala':
+                transliterated.append(transliterator.sinhala_to_roman(token))
+            elif lang == 'tamil':
+                transliterated.append(transliterator.tamil_to_roman(token))
+            else:
+                transliterated.append(token)
+        
+        processed_text = ' '.join(transliterated)
+        
+        # Step 4: Extract features
+        features = feature_extractor.extract_features([processed_text]) if processed_text else None
+        
+        return {
+            'original': text,
+            'normalized': normalized,
+            'tokens': tokens,
+            'transliterated': processed_text,
+            'features': features
+        }
+    except Exception as e:
+        print(f"⚠️ NLP Processing failed, using fallback: {e}")
+        # Ultimate Fallback: Return raw text so the page never crashes
+        return {
+            'original': text,
+            'normalized': text,
+            'tokens': [(word, 'unknown') for word in text.split()],
+            'transliterated': text,
+            'features': None
+        }
 
 def calculate_phq9_score(responses):
     """Calculate total PHQ-9 score and severity"""
@@ -147,6 +184,9 @@ def index():
     return render_template('index.html', 
                          phq9_data=PHQ9_DATA,
                          models=model_metadata,
+                         universities=UNIVERSITY_OPTIONS,
+                         years=YEAR_OPTIONS,
+                         genders=GENDER_OPTIONS,
                          year=datetime.now().year)
 
 @app.route('/about')
@@ -159,31 +199,42 @@ def contact():
     """Contact page"""
     return render_template('contact.html', year=datetime.now().year)
 
+# ROUTE 1: SHOWS THE INPUT FORM (GET Request)
 @app.route('/text-analysis')
 def text_analysis():
     """Text analysis page"""
+    # Pass an empty result so the page loads without crashing
+    empty_result = {
+        'text_analysis': {
+            'original': "No text submitted yet.",
+            'normalized': "No text submitted yet.",
+            'transliterated': "No text submitted yet.",
+            'tokens': []
+        },
+        'language_breakdown': {'sinhala': 0, 'tamil': 0, 'english': 0},
+        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
     return render_template('text_analysis.html', 
+                         result=empty_result,
+                         universities=UNIVERSITY_OPTIONS,
+                         years=YEAR_OPTIONS,
+                         genders=GENDER_OPTIONS,
                          year=datetime.now().year,
                          nlp_available=NLP_AVAILABLE)
 
+# ROUTE 2: PROCESSES THE TEXT (POST Request)
 @app.route('/analyze_text', methods=['POST'])
 def analyze_text():
     """Analyze code-mixed text for depression risk"""
     try:
-        # Get form data
+        # Get text from the form
         user_text = request.form.get('user_text', '')
         
         if not user_text:
             return render_template('error.html', error="Please enter some text to analyze.")
         
-        # Process text through NLP pipeline
+        # Process text (if NLP works, use it; if not, it just returns the text)
         processed = process_text(user_text)
-        
-        # Get demographic data
-        age = int(request.form.get('age', 25))
-        gender = request.form.get('gender', '0')
-        institution = request.form.get('institution', '0')
-        year = int(request.form.get('year', 1))
         
         # Count language tokens
         lang_counts = {'sinhala': 0, 'tamil': 0, 'english': 0}
@@ -191,23 +242,31 @@ def analyze_text():
             if lang in lang_counts:
                 lang_counts[lang] += 1
         
+        # Create the exact structure HTML expects
         result = {
-            'text_analysis': processed,
-            'demographics': {
-                'age': age,
-                'gender': gender,
-                'institution': institution,
-                'year': year
+            'text_analysis': {
+                'original': processed.get('original', user_text),
+                'normalized': processed.get('normalized', user_text),
+                'transliterated': processed.get('transliterated', user_text),
+                'tokens': processed.get('tokens', [])
             },
             'language_breakdown': lang_counts,
             'nlp_available': NLP_AVAILABLE,
             'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
         
-        return render_template('text_result.html', result=result, year=datetime.now().year)
+        # Render the template with the actual result
+        return render_template('text_analysis.html', 
+                             result=result,
+                             universities=UNIVERSITY_OPTIONS,
+                             years=YEAR_OPTIONS,
+                             genders=GENDER_OPTIONS,
+                             year=datetime.now().year)
         
     except Exception as e:
         print(f"❌ Error in text analysis: {e}")
+        import traceback
+        traceback.print_exc()
         return render_template('error.html', error=str(e))
 
 @app.route('/predict', methods=['POST'])
@@ -230,8 +289,8 @@ def predict():
         demographics = {
             'age': int(data.get('age', 25)),
             'gender': data.get('gender', '0'),
-            'institution': data.get('institution', '0'),
-            'year': int(data.get('year', 1))
+            'institution': data.get('institution', 'horizon'),
+            'year': data.get('year', '1')
         }
         
         # Get model type
@@ -242,8 +301,17 @@ def predict():
         ml_prediction = None
         if model:
             try:
-                features = responses + [demographics['age'], int(demographics['gender']), 
-                                       int(demographics['institution']), demographics['year']]
+                # Convert demographics to numeric for ML
+                gender_map = {'0': 0, '1': 1, '2': 2}
+                institution_map = {'horizon': 0, 'jaffna': 1, 'moratuwa': 2, 'eastern': 3, 'other': 4}
+                year_map = {'1': 1, '2': 2, '3': 3, '4': 4, 'other': 0}
+                
+                features = responses + [
+                    demographics['age'],
+                    gender_map.get(demographics['gender'], 0),
+                    institution_map.get(demographics['institution'], 0),
+                    year_map.get(demographics['year'], 1)
+                ]
                 features_array = np.array(features).reshape(1, -1)
                 
                 prediction = model.predict(features_array)
@@ -262,9 +330,30 @@ def predict():
             except Exception as e:
                 print(f"⚠️ ML Prediction error: {e}")
         
+        # Get university label
+        university_label = "Horizon Campus"
+        for uni in UNIVERSITY_OPTIONS:
+            if uni['value'] == demographics['institution']:
+                university_label = uni['label']
+                break
+        
+        # Get year label
+        year_label = "First Year"
+        for y in YEAR_OPTIONS:
+            if y['value'] == demographics['year']:
+                year_label = y['label']
+                break
+        
         result = {
             'phq9': phq9_result,
-            'demographics': demographics,
+            'demographics': {
+                'age': demographics['age'],
+                'gender': demographics['gender'],
+                'institution': demographics['institution'],
+                'institution_label': university_label,
+                'year': demographics['year'],
+                'year_label': year_label
+            },
             'ml_prediction': ml_prediction,
             'model_used': model_type if model else 'Rule-based',
             'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -274,6 +363,8 @@ def predict():
         
     except Exception as e:
         print(f"❌ Error in prediction: {e}")
+        import traceback
+        traceback.print_exc()
         return render_template('error.html', error=str(e))
 
 @app.route('/health')
