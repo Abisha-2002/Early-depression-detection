@@ -1,29 +1,172 @@
-{% extends "base.html" %}
-{% block title %}Results - Depression Risk Prediction{% endblock %}
-{% block content %}
-<div class="card" style="text-align: center; margin-bottom: 2rem;">
+{% extends "base.html" %} {% block title %}Results - Depression Risk Prediction{% endblock %} {% block content %}
+
+<style>
+    .result-score {
+        font-size: 3rem;
+        font-weight: 800;
+    }
+    
+    .result-severity {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    
+    .result-card {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .result-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 2rem;
+        padding: 1rem;
+    }
+    
+    .result-grid-item {
+        text-align: center;
+    }
+    
+    .result-grid-item .label {
+        color: var(--gray);
+        font-size: 0.875rem;
+    }
+    
+    .ml-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .ml-item {
+        text-align: center;
+        padding: 1rem;
+        background: var(--light-gray);
+        border-radius: var(--radius);
+    }
+    
+    .ml-item .label {
+        color: var(--gray);
+        font-size: 0.875rem;
+    }
+    
+    .ml-item .value {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    .prob-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .prob-item {
+        text-align: center;
+    }
+    
+    .prob-item .label {
+        font-size: 0.75rem;
+        color: var(--gray);
+    }
+    
+    .prob-bar-bg {
+        background: var(--light-gray);
+        height: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .prob-bar {
+        height: 100%;
+        transition: width 1s ease;
+    }
+    
+    .prob-bar.success {
+        background: var(--success);
+    }
+    
+    .prob-bar.warning {
+        background: var(--warning);
+    }
+    
+    .prob-bar.danger {
+        background: var(--danger);
+    }
+    
+    .prob-percent {
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .recommendation-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .recommendation-list li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--light-gray);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .recommendation-list li .bullet {
+        color: var(--primary);
+    }
+    
+    .risk-low {
+        color: var(--success);
+    }
+    
+    .risk-moderate {
+        color: var(--warning);
+    }
+    
+    .risk-high {
+        color: var(--danger);
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .interpretation-card {
+        margin-bottom: 2rem;
+    }
+    
+    .phq9-border {
+        border: 2px solid;
+    }
+</style>
+
+<div class="card result-card">
     <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">📊 Prediction Results</h1>
     <p style="color: var(--gray);">Analysis completed at {{ result.timestamp }}</p>
 </div>
 
 <!-- PHQ-9 Score Card -->
-<div class="card" style="text-align: center; margin-bottom: 2rem; border: 2px solid {{ result.phq9.color }};">
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; padding: 1rem;">
-        <div>
-            <p style="color: var(--gray); font-size: 0.875rem;">PHQ-9 Score</p>
-            <p style="font-size: 3rem; font-weight: 800; color: {{ result.phq9.color }};">
+<div class="card result-card phq9-border" style="border-color: {{ result.phq9.color }};">
+    <div class="result-grid">
+        <div class="result-grid-item">
+            <p class="label">PHQ-9 Score</p>
+            <p class="result-score" style="color: {{ result.phq9.color }};">
                 {{ result.phq9.total }}
             </p>
             <p style="color: var(--gray);">out of 27</p>
         </div>
-        <div>
-            <p style="color: var(--gray); font-size: 0.875rem;">Severity Level</p>
-            <p style="font-size: 2rem; font-weight: 700; color: {{ result.phq9.color }};">
+        <div class="result-grid-item">
+            <p class="label">Severity Level</p>
+            <p class="result-severity" style="color: {{ result.phq9.color }};">
                 {{ result.phq9.severity }}
             </p>
         </div>
-        <div>
-            <p style="color: var(--gray); font-size: 0.875rem;">Model Used</p>
+        <div class="result-grid-item">
+            <p class="label">Model Used</p>
             <p style="font-size: 1.25rem; font-weight: 600;">
                 {{ result.model_used }}
             </p>
@@ -35,55 +178,52 @@
 {% if result.ml_prediction %}
 <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--primary);">
     <h3 style="color: var(--primary); margin-bottom: 1rem;">🤖 Machine Learning Prediction</h3>
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-        <div style="text-align: center; padding: 1rem; background: var(--light-gray); border-radius: var(--radius);">
-            <p style="color: var(--gray); font-size: 0.875rem;">Risk Level</p>
-            <p style="font-size: 1.5rem; font-weight: 700; 
-               {% if result.ml_prediction.risk == 'Low' %}color: var(--success);
-               {% elif result.ml_prediction.risk == 'Moderate' %}color: var(--warning);
-               {% else %}color: var(--danger);{% endif %}">
+    <div class="ml-grid">
+        <div class="ml-item">
+            <p class="label">Risk Level</p>
+            <p class="value 
+                {% if result.ml_prediction.risk == 'Low' %}risk-low
+                {% elif result.ml_prediction.risk == 'Moderate' %}risk-moderate
+                {% else %}risk-high{% endif %}">
                 {{ result.ml_prediction.risk }}
             </p>
         </div>
-        <div style="text-align: center; padding: 1rem; background: var(--light-gray); border-radius: var(--radius);">
-            <p style="color: var(--gray); font-size: 0.875rem;">Risk Score</p>
-            <p style="font-size: 1.5rem; font-weight: 700;">{{ result.ml_prediction.score }}</p>
+        <div class="ml-item">
+            <p class="label">Risk Score</p>
+            <p class="value">{{ result.ml_prediction.score }}</p>
         </div>
-        <div style="text-align: center; padding: 1rem; background: var(--light-gray); border-radius: var(--radius);">
-            <p style="color: var(--gray); font-size: 0.875rem;">Confidence</p>
-            <p style="font-size: 1.5rem; font-weight: 700;">
-                {% if result.ml_prediction.probabilities %}
-                {{ (result.ml_prediction.probabilities[result.ml_prediction.score] * 100)|round(1) }}%
-                {% else %}
-                N/A
-                {% endif %}
+        <div class="ml-item">
+            <p class="label">Confidence</p>
+            <p class="value">
+                {% if result.ml_prediction.probabilities %} {{ (result.ml_prediction.probabilities[result.ml_prediction.score] * 100)|round(1) }}% {% else %} N/A {% endif %}
             </p>
         </div>
     </div>
+
     {% if result.ml_prediction.probabilities %}
     <div style="margin-top: 1rem;">
         <p style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem;">Probability Distribution</p>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-            <div>
-                <p style="font-size: 0.75rem; color: var(--gray);">Low</p>
-                <div style="background: var(--light-gray); height: 8px; border-radius: 4px; overflow: hidden;">
-                    <div style="height: 100%; width: {{ (result.ml_prediction.probabilities[0] * 100)|round(1) }}%; background: var(--success); transition: width 1s ease;"></div>
+        <div class="prob-grid">
+            <div class="prob-item">
+                <p class="label">Low</p>
+                <div class="prob-bar-bg">
+                    <div class="prob-bar success" style="width: {{ (result.ml_prediction.probabilities[0] * 100)|round(1) }}%;"></div>
                 </div>
-                <p style="font-size: 0.75rem; font-weight: 600;">{{ (result.ml_prediction.probabilities[0] * 100)|round(1) }}%</p>
+                <p class="prob-percent">{{ (result.ml_prediction.probabilities[0] * 100)|round(1) }}%</p>
             </div>
-            <div>
-                <p style="font-size: 0.75rem; color: var(--gray);">Moderate</p>
-                <div style="background: var(--light-gray); height: 8px; border-radius: 4px; overflow: hidden;">
-                    <div style="height: 100%; width: {{ (result.ml_prediction.probabilities[1] * 100)|round(1) }}%; background: var(--warning); transition: width 1s ease;"></div>
+            <div class="prob-item">
+                <p class="label">Moderate</p>
+                <div class="prob-bar-bg">
+                    <div class="prob-bar warning" style="width: {{ (result.ml_prediction.probabilities[1] * 100)|round(1) }}%;"></div>
                 </div>
-                <p style="font-size: 0.75rem; font-weight: 600;">{{ (result.ml_prediction.probabilities[1] * 100)|round(1) }}%</p>
+                <p class="prob-percent">{{ (result.ml_prediction.probabilities[1] * 100)|round(1) }}%</p>
             </div>
-            <div>
-                <p style="font-size: 0.75rem; color: var(--gray);">High</p>
-                <div style="background: var(--light-gray); height: 8px; border-radius: 4px; overflow: hidden;">
-                    <div style="height: 100%; width: {{ (result.ml_prediction.probabilities[2] * 100)|round(1) }}%; background: var(--danger); transition: width 1s ease;"></div>
+            <div class="prob-item">
+                <p class="label">High</p>
+                <div class="prob-bar-bg">
+                    <div class="prob-bar danger" style="width: {{ (result.ml_prediction.probabilities[2] * 100)|round(1) }}%;"></div>
                 </div>
-                <p style="font-size: 0.75rem; font-weight: 600;">{{ (result.ml_prediction.probabilities[2] * 100)|round(1) }}%</p>
+                <p class="prob-percent">{{ (result.ml_prediction.probabilities[2] * 100)|round(1) }}%</p>
             </div>
         </div>
     </div>
@@ -92,7 +232,7 @@
 {% endif %}
 
 <!-- Interpretation -->
-<div class="card" style="margin-bottom: 2rem; background: {{ result.phq9.color }}10;">
+<div class="card interpretation-card" style="background: {{ result.phq9.color }}10;">
     <h3 style="color: {{ result.phq9.color }}; margin-bottom: 0.5rem;">📝 Interpretation</h3>
     <p style="color: var(--dark);">{{ result.phq9.description }}</p>
 </div>
@@ -100,33 +240,48 @@
 <!-- Recommendations -->
 <div class="card" style="margin-bottom: 2rem;">
     <h3 style="color: var(--primary); margin-bottom: 0.5rem;">💡 Recommendations</h3>
-    <ul style="list-style: none; padding: 0;">
-        {% for rec in result.recommendations %}
-        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--light-gray); display: flex; align-items: center; gap: 0.5rem;">
-            <span style="color: var(--primary);">▸</span>
-            {{ rec }}
+    <ul class="recommendation-list">
+        {% if result.recommendations %} {% for rec in result.recommendations %}
+        <li>
+            <span class="bullet">▸</span> {{ rec }}
         </li>
-        {% endfor %}
+        {% endfor %} {% else %}
+        <li>
+            <span class="bullet">▸</span> Continue monitoring your mental health
+        </li>
+        <li>
+            <span class="bullet">▸</span> Practice self-care and mindfulness
+        </li>
+        <li>
+            <span class="bullet">▸</span> Reach out to friends and family
+        </li>
+        <li>
+            <span class="bullet">▸</span> Consider speaking with a mental health professional
+        </li>
+        <li>
+            <span class="bullet">▸</span> Maintain a healthy lifestyle with exercise and proper sleep
+        </li>
+        {% endif %}
     </ul>
 </div>
 
 <!-- Actions -->
-<div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+<div class="action-buttons">
     <a href="/" class="btn-primary">🔄 Take Again</a>
     <button onclick="window.print()" class="btn-secondary">🖨️ Print Results</button>
 </div>
 
 <script>
-// Animate probability bars on load
-document.addEventListener('DOMContentLoaded', function() {
-    const bars = document.querySelectorAll('.prob-bar');
-    bars.forEach(bar => {
-        const width = bar.style.width;
-        bar.style.width = '0%';
-        setTimeout(() => {
-            bar.style.width = width;
-        }, 300);
+    document.addEventListener('DOMContentLoaded', function() {
+        var bars = document.querySelectorAll('.prob-bar');
+        bars.forEach(function(bar) {
+            var width = bar.style.width;
+            bar.style.width = '0%';
+            setTimeout(function() {
+                bar.style.width = width;
+            }, 300);
+        });
     });
-});
 </script>
+
 {% endblock %}

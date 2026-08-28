@@ -1,76 +1,76 @@
-{% extends "base.html" %}
-{% block title %}Contact - SOC-AI-Health{% endblock %}
-{% block content %}
-<div class="card" style="margin-bottom: 2rem; text-align: center; background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);">
-    <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">📧 Contact Information</h1>
-    <p style="color: var(--gray); margin-top: 0.5rem; font-size: 1.1rem;">Get in touch with the project team</p>
-    <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <span style="background: var(--primary); color: white; padding: 0.3rem 1rem; border-radius: 50px; font-size: 0.8rem;">💬 We're here to help</span>
-        <span style="background: var(--success); color: white; padding: 0.3rem 1rem; border-radius: 50px; font-size: 0.8rem;">🤝 Confidential & Safe</span>
-        <span style="background: var(--secondary); color: white; padding: 0.3rem 1rem; border-radius: 50px; font-size: 0.8rem;">❤️ You are not alone</span>
+{% extends "base.html" %} {% block title %}Contact - MindAssist{% endblock %} {% block content %}
+
+<div class="hero" style="background: var(--primary-gradient);">
+    <div class="hero-content">
+        <h1>Contact Information</h1>
+        <p>We're here to support you on your mental health journey. Reach out anytime.</p>
     </div>
 </div>
 
-<div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--primary);">
-    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">🌟 Project Mission</h3>
-    <p style="color: var(--gray); line-height: 1.8;">
-        Our mission is to leverage AI technology to provide accessible, confidential, and accurate mental health screening. 
-        We believe that early detection and awareness can make a significant difference in mental health outcomes.
-    </p>
-    <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; text-align: center;">
-        <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">🎯</div>
-            <div style="font-weight: 600;">Early Detection</div>
-            <div style="font-size: 0.8rem; color: var(--gray);">Identify risks early</div>
-        </div>
-        <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">🤖</div>
-            <div style="font-weight: 600;">AI-Powered</div>
-            <div style="font-size: 0.8rem; color: var(--gray);">Intelligent analysis</div>
-        </div>
-        <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">💚</div>
-            <div style="font-weight: 600;">Support & Care</div>
-            <div style="font-size: 0.8rem; color: var(--gray);">You matter</div>
-        </div>
+<div class="grid-3" style="margin: 2rem 0;">
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 3rem;">💚</div>
+        <h3>We're here to help</h3>
+        <p style="color: var(--gray);">Confidential & Safe — Your privacy matters.</p>
+    </div>
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 3rem;">🤝</div>
+        <h3>You are not alone</h3>
+        <p style="color: var(--gray);">Support available 24/7 for everyone.</p>
+    </div>
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 3rem;">🎯</div>
+        <h3>Early Detection</h3>
+        <p style="color: var(--gray);">Identify risks early with AI-powered analysis.</p>
     </div>
 </div>
 
-<div class="card" style="margin-bottom: 2rem; background: var(--light-gray); border-left: 4px solid var(--warning);">
-    <h3 style="color: var(--warning);">⚠️ Emergency Helplines</h3>
-    <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 1rem;">If you or someone you know is in crisis, please reach out immediately.</p>
-    <ul style="color: var(--gray); line-height: 2.2; padding-left: 1.5rem;">
-        <li><strong>National Mental Health Helpline:</strong> 1926 (24/7)</li>
-        <li><strong>Sumithrayo Sri Lanka:</strong> +94 11 268 6688</li>
-        <li><strong>CCC Foundation:</strong> +94 11 267 9777</li>
-        <li><strong>University Counseling Center:</strong> +94 11 123 4567</li>
-        <li><strong>Emergency Police:</strong> 119</li>
-    </ul>
+<div class="grid-2" style="margin: 2rem 0;">
+    <div class="card">
+        <h2 style="color: var(--primary);">🚨 Emergency Helplines</h2>
+        <p style="color: var(--gray); margin-bottom: 1rem;">If you or someone you know is in crisis, please reach out immediately:</p>
+        <ul style="list-style: none; padding: 0; line-height: 2.5;">
+            <li><span style="display: inline-block; width: 30px;">🚔</span> <strong>Emergency Police:</strong> 119</li>
+            <li><span style="display: inline-block; width: 30px;">🧠</span> <strong>National Mental Health:</strong> 1926 (24/7)</li>
+            <li><span style="display: inline-block; width: 30px;">💚</span> <strong>Sumithrayo Sri Lanka:</strong> +94 11 268 6688</li>
+            <li><span style="display: inline-block; width: 30px;">👶</span> <strong>Child Protection:</strong> 1929</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2 style="color: var(--primary);">👩 Women & Girls Helplines</h2>
+        <ul style="list-style: none; padding: 0; line-height: 2.5;">
+            <li><span style="display: inline-block; width: 30px;">💜</span> <strong>Women in Need (WIN):</strong> +94 11 471 8585</li>
+            <li><span style="display: inline-block; width: 30px;">💜</span> <strong>National Committee on Women:</strong> +94 11 267 9777</li>
+            <li><span style="display: inline-block; width: 30px;">💜</span> <strong>Women's Development Centre:</strong> +94 11 287 7890</li>
+            <li><span style="display: inline-block; width: 30px;">💜</span> <strong>Domestic Violence Helpline:</strong> +94 11 269 9525</li>
+        </ul>
+    </div>
 </div>
 
-<div class="card" style="margin-bottom: 2rem; background: #fce4ec; border-left: 4px solid #e91e63;">
-    <h3 style="color: #e91e63;">👩 Women & Girls Helplines</h3>
-    <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 1rem;">Dedicated support for women and girls facing any form of distress.</p>
-    <ul style="color: var(--gray); line-height: 2.2; padding-left: 1.5rem;">
-        <li><strong>Women in Need (WIN) Helpline:</strong> +94 11 471 8585</li>
-        <li><strong>National Committee on Women:</strong> +94 11 267 9777</li>
-        <li><strong>Child & Women Protection Desk:</strong> 1929</li>
-        <li><strong>Women's Development Centre:</strong> +94 11 287 7890</li>
-        <li><strong>Domestic Violence Helpline:</strong> +94 11 269 9525</li>
-    </ul>
-</div>
-
-<div class="card" style="margin-bottom: 2rem; text-align: center; background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);">
-    <h3 style="color: var(--primary);">💪 Remember</h3>
-    <p style="color: var(--gray); font-size: 1.1rem; max-width: 600px; margin: 0 auto; line-height: 1.8;">
-        "Your mental health is just as important as your physical health. 
-        <br>Seeking help is a sign of strength, not weakness."
+<div class="card" style="background: #FEF3C7; border-left: 4px solid #F59E0B; text-align: center;">
+    <p style="font-size: 1.2rem;">
+        💛 <em>"Your mental health is just as important as your physical health. Seeking help is a sign of strength, not weakness."</em>
     </p>
-    <div style="margin-top: 1rem; font-size: 2rem;">💚</div>
 </div>
 
-<div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
-    <a href="/" class="btn-primary">🏠 Back to Home</a>
-    <a href="/about" class="btn-secondary">📖 Learn More</a>
+<div class="card" style="text-align: center;">
+    <h2 style="color: var(--primary);">📧 Get in Touch</h2>
+    <p style="color: var(--gray);">Have questions or feedback? Reach out to the developer:</p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem;">
+        <a href="mailto:shaabis71@gmail.com" class="btn-primary">
+            <i class="fas fa-envelope"></i> Email
+        </a>
+        <a href="https://www.linkedin.com/in/abisha-wesly-jeyananthan-2a05a32b8" target="_blank" class="btn-secondary">
+            <i class="fab fa-linkedin-in"></i> LinkedIn
+        </a>
+        <a href="https://github.com/Abisha-2002" target="_blank" class="btn-secondary">
+            <i class="fab fa-github"></i> GitHub
+        </a>
+        <a href="https://www.facebook.com/share/18ntpCvmjK" target="_blank" class="btn-secondary">
+            <i class="fab fa-facebook-f"></i> Facebook
+        </a>
+    </div>
 </div>
+
 {% endblock %}

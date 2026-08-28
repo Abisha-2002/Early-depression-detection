@@ -1,80 +1,54 @@
-{% extends "base.html" %}
-{% block title %}About - MindAssist{% endblock %}
-{% block content %}
-<div class="card" style="margin-bottom: 2rem; text-align: center; background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);">
-    <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">📖 About MindAssist</h1>
-    <p style="color: var(--gray); margin-top: 0.5rem; font-size: 1.1rem;">Your AI-Powered Mental Health Companion</p>
-</div>
+{% extends "base.html" %} {% block title %}About - MindAssist{% endblock %} {% block content %}
 
-<div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--primary);">
-    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">🎯 Project Overview</h3>
-    <p style="color: var(--gray); line-height: 1.8;">
-        <strong>MindAssist</strong> is an intelligent system designed for early detection of depression risk using machine learning. 
-        The system analyzes responses to the PHQ-9 (Patient Health Questionnaire-9) and provides evidence-based risk predictions 
-        to help individuals understand their mental health status.
-    </p>
-    <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; text-align: center;">
-        <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">🎯</div>
-            <div style="font-weight: 600;">Early Detection</div>
-            <div style="font-size: 0.8rem; color: var(--gray);">Identify risks early</div>
-        </div>
-        <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">🤖</div>
-            <div style="font-weight: 600;">AI-Powered</div>
-            <div style="font-size: 0.8rem; color: var(--gray);">Intelligent analysis</div>
-        </div>
-        <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">💚</div>
-            <div style="font-weight: 600;">Support & Care</div>
-            <div style="font-size: 0.8rem; color: var(--gray);">You matter</div>
-        </div>
+<div class="hero" style="background: var(--primary-gradient);">
+    <div class="hero-content">
+        <h1>About MindAssist</h1>
+        <p>Your AI-Powered Mental Health Companion — Evidence-based depression risk prediction using machine learning.</p>
     </div>
 </div>
 
-<div class="card" style="margin-bottom: 2rem;">
-    <h3 style="color: var(--primary); margin-bottom: 1rem;">🧠 Models Used</h3>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-        <div style="background: var(--light-gray); padding: 1.5rem; border-radius: var(--radius); border-left: 4px solid var(--primary);">
+<div class="grid-2" style="margin: 2rem 0;">
+    <div class="card">
+        <h2 style="color: var(--primary);">📋 Project Overview</h2>
+        <p style="color: var(--gray); line-height: 1.8;">
+            MindAssist is an intelligent system designed for early detection of depression risk using machine learning. The system analyzes responses to the <strong>PHQ-9 (Patient Health Questionnaire-9)</strong> and provides evidence-based risk predictions
+            to help individuals understand their mental health status.
+        </p>
+        <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+            <span style="background: var(--light-gray); padding: 0.25rem 1rem; border-radius: 50px; font-size: 0.85rem;">🔍 Early Detection</span>
+            <span style="background: var(--light-gray); padding: 0.25rem 1rem; border-radius: 50px; font-size: 0.85rem;">🤖 AI-Powered</span>
+            <span style="background: var(--light-gray); padding: 0.25rem 1rem; border-radius: 50px; font-size: 0.85rem;">💚 Support & Care</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="color: var(--primary);">📊 Models Used</h2>
+        <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 0.75rem; border-left: 4px solid var(--primary);">
             <h4 style="color: var(--primary);">XGBoost (M4) ⭐</h4>
-            <p style="color: var(--gray); font-size: 0.9rem;">Proposed model with feature fusion and SMOTE-ENN for handling class imbalance</p>
-            <p style="color: var(--gray); font-size: 0.8rem; margin-top: 0.5rem;">Accuracy: 89% | F1-Score: 0.87</p>
+            <p style="color: var(--gray); font-size: 0.9rem;">Proposed model with feature fusion and SMOTE-ENN</p>
+            <p><strong>Accuracy:</strong> 89% | <strong>F1-Score:</strong> 0.87</p>
         </div>
-        <div style="background: var(--light-gray); padding: 1.5rem; border-radius: var(--radius); border-left: 4px solid var(--warning);">
-            <h4 style="color: var(--warning);">Random Forest</h4>
-            <p style="color: var(--gray); font-size: 0.9rem;">Baseline model using ensemble learning for comparison</p>
-            <p style="color: var(--gray); font-size: 0.8rem; margin-top: 0.5rem;">Accuracy: 85% | F1-Score: 0.83</p>
-        </div>
-    </div>
-</div>
-
-<div class="card" style="margin-bottom: 2rem;">
-    <h3 style="color: var(--primary); margin-bottom: 1rem;">👨‍🎓 Student Information</h3>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-        <div>
-            <p style="color: var(--gray);"><strong>Name:</strong> Wesly Jeyananthan Abisha</p>
-            <p style="color: var(--gray);"><strong>Index No:</strong> ITBIN-2313-0003</p>
-            <p style="color: var(--gray);"><strong>Email:</strong> abisha@example.edu.lk</p>
-        </div>
-        <div>
-            <p style="color: var(--gray);"><strong>Module:</strong> IT41043 - Intelligent Systems</p>
-            <p style="color: var(--gray);"><strong>Institution:</strong> Horizon Campus</p>
-            <p style="color: var(--gray);"><strong>Faculty:</strong> Faculty of Information Technology</p>
+        <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius-sm); border-left: 4px solid var(--secondary);">
+            <h4 style="color: var(--secondary);">Random Forest</h4>
+            <p style="color: var(--gray); font-size: 0.9rem;">Baseline model using ensemble learning</p>
+            <p><strong>Accuracy:</strong> 85% | <strong>F1-Score:</strong> 0.83</p>
         </div>
     </div>
 </div>
 
-<div class="card" style="margin-bottom: 2rem;">
-    <h3 style="color: var(--primary); margin-bottom: 1rem;">📚 References</h3>
-    <ul style="color: var(--gray); line-height: 1.8; padding-left: 1.5rem;">
-        <li>Kroenke, K., Spitzer, R. L., & Williams, J. B. (2001). The PHQ-9: validity of a brief depression severity measure.</li>
-        <li>Trotzek, M., Koitka, S., & Friedrich, C. M. (2020). Utilizing neural networks and linguistic metadata for early detection of depression.</li>
-        <li>Rathod, S., et al. (2020). Machine learning for mental health: A review.</li>
-    </ul>
+<div class="grid-2" style="margin: 2rem 0;">
+    <div class="card">
+        <h2 style="color: var(--primary);">👨‍🎓 Student Information</h2>
+        <p><strong>Name:</strong> Wesly Jeyananthan Abisha</p>
+
+        <p><strong>Email:</strong> shaabis71@gmail.com</p>
+        <hr style="margin: 1rem 0;">
+        <p><strong>Module:</strong> IT41043 - Intelligent Systems</p>
+        <p><strong>Institution:</strong> Horizon Campus</p>
+        <p><strong>Faculty:</strong> Faculty of Information Technology</p>
+    </div>
+
+
 </div>
 
-<div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
-    <a href="/" class="btn-primary">🏠 Back to Home</a>
-    <a href="/contact" class="btn-secondary">📧 Contact Us</a>
-</div>
 {% endblock %}

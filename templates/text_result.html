@@ -1,21 +1,191 @@
-{% extends "base.html" %}
-{% block title %}Text Analysis Results - MindAssist{% endblock %}
-{% block content %}
-<div class="card" style="margin-bottom: 2rem; text-align: center; background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);">
+{% extends "base.html" %} {% block title %}Text Analysis Results - MindAssist{% endblock %} {% block content %}
+
+<style>
+    .lang-card {
+        padding: 1rem;
+        border-radius: var(--radius);
+        text-align: center;
+    }
+    
+    .lang-card.sinhala {
+        background: #fce4ec;
+    }
+    
+    .lang-card.tamil {
+        background: #e3f2fd;
+    }
+    
+    .lang-card.english {
+        background: #e8f5e9;
+    }
+    
+    .lang-icon {
+        font-size: 2rem;
+    }
+    
+    .lang-name {
+        font-weight: 600;
+    }
+    
+    .lang-count {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    .lang-count.sinhala {
+        color: #e91e63;
+    }
+    
+    .lang-count.tamil {
+        color: #1976d2;
+    }
+    
+    .lang-count.english {
+        color: #388e3c;
+    }
+    
+    .lang-label {
+        color: var(--gray);
+        font-size: 0.8rem;
+    }
+    
+    .token-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .token-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.25rem 0.5rem;
+        background: var(--light-gray);
+        border-radius: 4px;
+    }
+    
+    .token-text {
+        font-weight: 500;
+    }
+    
+    .token-lang {
+        font-size: 0.8rem;
+    }
+    
+    .token-lang.sinhala {
+        color: #e91e63;
+    }
+    
+    .token-lang.tamil {
+        color: #1976d2;
+    }
+    
+    .token-lang.english {
+        color: #388e3c;
+    }
+    
+    .suggestion-card {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        border-radius: var(--radius);
+        border-left: 4px solid;
+    }
+    
+    .suggestion-card.tamil-dominant {
+        background: #e3f2fd;
+        border-color: #1976d2;
+    }
+    
+    .suggestion-card.sinhala-dominant {
+        background: #fce4ec;
+        border-color: #e91e63;
+    }
+    
+    .suggestion-card.english-dominant {
+        background: #e8f5e9;
+        border-color: #388e3c;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    
+    .text-block {
+        background: var(--light-gray);
+        padding: 1rem;
+        border-radius: var(--radius);
+    }
+    
+    .text-block p {
+        font-size: 1.1rem;
+    }
+    /* Styles for the new input form */
+    
+    .analysis-form {
+        margin-bottom: 2rem;
+        text-align: left;
+    }
+    
+    .analysis-form textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: var(--radius);
+        font-size: 1.1rem;
+        box-sizing: border-box;
+    }
+    
+    .analysis-form textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+    
+    .analysis-form button {
+        margin-top: 1rem;
+        cursor: pointer;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius);
+        font-weight: 600;
+        color: white;
+        background: var(--primary);
+        font-size: 1rem;
+    }
+    
+    .analysis-form button:hover {
+        opacity: 0.9;
+    }
+</style>
+
+<!-- NEW INPUT FORM TO TYPE TEXT -->
+<div class="card analysis-form">
+    <h3 style="color: var(--primary); margin-bottom: 1rem;">✍️ Enter Text to Analyze</h3>
+    <form action="/analyze_text" method="POST">
+        <textarea name="user_text" rows="5" placeholder="Type or paste your text here..." required></textarea>
+        <button type="submit">🔍 Analyze Text</button>
+    </form>
+</div>
+
+<div class="card" style="text-align: center; background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%); margin-bottom: 2rem; border: none;">
     <h1 style="font-size: 2rem; font-weight: 800; color: var(--primary);">📊 Text Analysis Results</h1>
     <p style="color: var(--gray);">Analysis completed at {{ result.timestamp }}</p>
 </div>
 
 <div class="card" style="margin-bottom: 2rem;">
     <h3 style="color: var(--primary); margin-bottom: 1rem;">📝 Original Text</h3>
-    <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius);">
-        <p style="font-size: 1.1rem;">{{ result.text_analysis.original }}</p>
+    <div class="text-block">
+        <p>{{ result.text_analysis.original }}</p>
     </div>
 </div>
 
 <div class="card" style="margin-bottom: 2rem;">
     <h3 style="color: var(--primary); margin-bottom: 1rem;">🔄 Normalized Text</h3>
-    <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius);">
+    <div class="text-block">
         <p>{{ result.text_analysis.normalized }}</p>
     </div>
 </div>
@@ -23,39 +193,34 @@
 <div class="card" style="margin-bottom: 2rem;">
     <h3 style="color: var(--primary); margin-bottom: 1rem;">🌍 Language Breakdown</h3>
     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; text-align: center;">
-        <div style="background: #fce4ec; padding: 1rem; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">🇱🇰</div>
-            <div style="font-weight: 600;">Sinhala</div>
-            <div style="font-size: 1.5rem; font-weight: 700; color: #e91e63;">{{ result.language_breakdown.sinhala }}</div>
-            <div style="color: var(--gray); font-size: 0.8rem;">tokens</div>
+        <div class="lang-card sinhala">
+            <div class="lang-icon">🇱🇰</div>
+            <div class="lang-name">Sinhala</div>
+            <div class="lang-count sinhala">{{ result.language_breakdown.sinhala }}</div>
+            <div class="lang-label">tokens</div>
         </div>
-        <div style="background: #e3f2fd; padding: 1rem; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">🇱🇰</div>
-            <div style="font-weight: 600;">Tamil</div>
-            <div style="font-size: 1.5rem; font-weight: 700; color: #1976d2;">{{ result.language_breakdown.tamil }}</div>
-            <div style="color: var(--gray); font-size: 0.8rem;">tokens</div>
+        <div class="lang-card tamil">
+            <div class="lang-icon">🇱🇰</div>
+            <div class="lang-name">Tamil</div>
+            <div class="lang-count tamil">{{ result.language_breakdown.tamil }}</div>
+            <div class="lang-label">tokens</div>
         </div>
-        <div style="background: #e8f5e9; padding: 1rem; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">🇬🇧</div>
-            <div style="font-weight: 600;">English</div>
-            <div style="font-size: 1.5rem; font-weight: 700; color: #388e3c;">{{ result.language_breakdown.english }}</div>
-            <div style="color: var(--gray); font-size: 0.8rem;">tokens</div>
+        <div class="lang-card english">
+            <div class="lang-icon">🇬🇧</div>
+            <div class="lang-name">English</div>
+            <div class="lang-count english">{{ result.language_breakdown.english }}</div>
+            <div class="lang-label">tokens</div>
         </div>
     </div>
 </div>
 
 <div class="card" style="margin-bottom: 2rem;">
     <h3 style="color: var(--primary); margin-bottom: 1rem;">🔤 Token Analysis</h3>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; max-height: 300px; overflow-y: auto;">
+    <div class="token-grid">
         {% for token, lang in result.text_analysis.tokens %}
-        <div style="display: flex; justify-content: space-between; padding: 0.25rem 0.5rem; background: var(--light-gray); border-radius: 4px;">
-            <span style="font-weight: 500;">"{{ token }}"</span>
-            <span style="font-size: 0.8rem; 
-                {% if lang == 'sinhala' %}color: #e91e63;
-                {% elif lang == 'tamil' %}color: #1976d2;
-                {% else %}color: #388e3c;{% endif %}">
-                {{ lang }}
-            </span>
+        <div class="token-item">
+            <span class="token-text">"{{ token }}"</span>
+            <span class="token-lang {{ lang }}">{{ lang }}</span>
         </div>
         {% endfor %}
     </div>
@@ -63,307 +228,145 @@
 
 <div class="card" style="margin-bottom: 2rem;">
     <h3 style="color: var(--primary); margin-bottom: 1rem;">🔄 Transliterated Text</h3>
-    <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius);">
+    <div class="text-block">
         <p style="font-family: monospace;">{{ result.text_analysis.transliterated }}</p>
     </div>
 </div>
 
 <!-- Language-Specific Suggestion Message -->
-<div class="card" style="margin-bottom: 2rem; background: {% if result.language_breakdown.tamil > result.language_breakdown.sinhala %}#e3f2fd{% elif result.language_breakdown.sinhala > result.language_breakdown.tamil %}#fce4ec{% else %}#e8f5e9{% endif %}; border-left: 4px solid {% if result.language_breakdown.tamil > result.language_breakdown.sinhala %}#1976d2{% elif result.language_breakdown.sinhala > result.language_breakdown.tamil %}#e91e63{% else %}#388e3c{% endif %};">
-    <h3 style="color: {% if result.language_breakdown.tamil > result.language_breakdown.sinhala %}#1976d2{% elif result.language_breakdown.sinhala > result.language_breakdown.tamil %}#e91e63{% else %}#388e3c{% endif %}; margin-bottom: 0.5rem;">💡 Suggestions & Recommendations</h3>
-    
-    {% if result.language_breakdown.tamil > result.language_breakdown.sinhala %}
-        <!-- ===== TAMIL LANGUAGE SUGGESTIONS ===== -->
-        <div style="color: var(--dark); line-height: 1.8;">
-            <!-- Analysis Summary -->
-            <div style="background: #e3f2fd; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
-                <p><strong>📊 Tamil Analysis Summary:</strong></p>
-                <p>உங்கள் உரையில் <strong>{{ result.language_breakdown.tamil }}</strong> தமிழ் சொற்களும், 
-                <strong>{{ result.language_breakdown.sinhala }}</strong> சிங்கள சொற்களும், 
+{% if result.language_breakdown.tamil > result.language_breakdown.sinhala %}
+<!-- TAMIL -->
+<div class="suggestion-card tamil-dominant">
+    <h3 style="color: #1976d2; margin-bottom: 0.5rem;">💡 Suggestions & Recommendations</h3>
+    <div style="color: var(--dark); line-height: 1.8;">
+        <div style="background: #e3f2fd; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
+            <p><strong>📊 Tamil Analysis Summary:</strong></p>
+            <p>உங்கள் உரையில் <strong>{{ result.language_breakdown.tamil }}</strong> தமிழ் சொற்களும்,
+                <strong>{{ result.language_breakdown.sinhala }}</strong> சிங்கள சொற்களும்,
                 <strong>{{ result.language_breakdown.english }}</strong> ஆங்கில சொற்களும் உள்ளன.</p>
-            </div>
-
-            <!-- Main Suggestion -->
-            <div style="margin-bottom: 1rem;">
-                <p><strong>💬 General Suggestion:</strong></p>
-                <p>உங்கள் உரை வெற்றிகரமாக பகுப்பாய்வு செய்யப்பட்டுள்ளது. இந்த முடிவுகளின் அடிப்படையில், உங்கள் மனநிலை பற்றிய மேலும் தகவல்களைப் பெற விரும்பினால், கீழே உள்ள பரிந்துரைகளைப் பார்க்கவும்.</p>
-            </div>
-
-            <!-- Healthy Life Advice -->
-            <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem; border-left: 4px solid #4CAF50;">
-                <p><strong>🌿 Healthy Life Advice - ஆரோக்கியமான வாழ்க்கை அறிவுரை:</strong></p>
-                <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
-                    <li>🧘 <strong>Meditation:</strong> தினமும் 10 நிமிடம் தியானம் செய்யவும். இது மன அழுத்தத்தை குறைக்கும்.</li>
-                    <li>😴 <strong>Sleep:</strong> இரவில் 7-8 மணி நேரம் தூங்கவும். உடல் மற்றும் மனம் ஓய்வெடுக்க இது அவசியம்.</li>
-                    <li>🥗 <strong>Healthy Food:</strong> சத்தான உணவுகளை உட்கொள்ளவும். பழங்கள், காய்கறிகள் அதிகம் சேர்க்கவும்.</li>
-                    <li>🏃 <strong>Exercise:</strong> தினமும் 30 நிமிடம் உடற்பயிற்சி செய்யவும். நடைபயிற்சி, ஓடுதல், யோகா போன்றவை.</li>
-                    <li>💧 <strong>Water:</strong> தினமும் 8 கிளாஸ் தண்ணீர் குடிக்கவும். உடலை ஹைட்ரேட் செய்யவும்.</li>
-                    <li>📖 <strong>Reading:</strong> தினமும் 15 நிமிடம் புத்தகம் படிக்கவும். இது மனதை அமைதிப்படுத்தும்.</li>
-                    <li>👨‍👩‍👦 <strong>Family Time:</strong> குடும்பத்துடன் நேரம் செலவிடவும். உறவுகளை வலுப்படுத்தவும்.</li>
-                </ul>
-            </div>
-
-            <!-- YouTube Video Recommendations - Tamil (Working Links) -->
-            <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
-                <p><strong>🎥 Recommended Videos - பரிந்துரைக்கப்பட்ட வீடியோக்கள்:</strong></p>
-                <ul style="padding-left: 1.5rem; margin: 0.5rem 0; list-style: none;">
-                    <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 8px;">
-                        <a href="https://www.youtube.com/watch?v=7M1wv3st0Cw" target="_blank" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="font-size: 1.5rem;">🧘</span>
-                            <span><strong>10 Minute Guided Meditation - Tamil</strong><br><small>Simple meditation for beginners</small></span>
-                        </a>
-                    </li>
-                    <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 8px;">
-                        <a href="https://www.youtube.com/watch?v=QtKSL_m7bGg" target="_blank" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="font-size: 1.5rem;">🧠</span>
-                            <span><strong>Stress Relief Music - Tamil</strong><br><small>Calm your mind with relaxing music</small></span>
-                        </a>
-                    </li>
-                    <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 8px;">
-                        <a href="https://www.youtube.com/watch?v=ZuQG08DKnH0" target="_blank" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="font-size: 1.5rem;">💪</span>
-                            <span><strong>Yoga for Anxiety - Tamil</strong><br><small>Simple yoga for mental health</small></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Quick Actions -->
-            <div style="background: #fff3cd; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
-                <p><strong>⚡ Quick Actions:</strong></p>
-                <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
-                    <li>📝 உங்கள் உரையை தமிழில் மேம்படுத்த விரும்புகிறீர்களா?</li>
-                    <li>🔄 ஆங்கில மொழிபெயர்ப்பைப் பார்க்க விரும்புகிறீர்களா?</li>
-                    <li>📊 மனநிலை மதிப்பீட்டைப் பெற விரும்புகிறீர்களா?</li>
-                </ul>
-            </div>
-
-            <!-- Tip -->
-            <p style="margin-top: 0.5rem; font-size: 0.95rem; color: var(--gray);">
-                <strong>💡 Tip:</strong> "நீங்கள் தமிழ் எழுத்துக்களில் பார்க்க விரும்புகிறீர்களா, அல்லது இந்த ஆங்கில எழுத்து வடிவம் சரிதானா?"<br>
-                <em>(Would you prefer to see the transliteration in Tamil script, or is this Romanized format correct?)</em>
-            </p>
-
-            <!-- Mental Health Advice -->
-            <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem; border-left: 4px solid #e91e63;">
-                <p><strong>🧠 Mental Health Advice:</strong></p>
-                <p>உங்கள் உணர்வுகளைப் பகிர்ந்தமைக்கு நன்றி. உங்கள் மனநிலையில் ஏற்படும் மாற்றங்களைக் கவனிக்கவும், தேவைப்பட்டால் நிபுணர் உதவியை நாடவும்.</p>
-                <p style="margin-top: 0.5rem; color: var(--gray);">
-                    <strong>📌 Next Step:</strong> உங்கள் பதில்களை மேலும் தெளிவுபடுத்த, மருத்துவ நிபுணரிடம் பேச பரிந்துரைக்கிறோம்.
-                </p>
-            </div>
-
-            <!-- Contact Support -->
-            <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem;">
-                <p><strong>📞 Support Helplines:</strong></p>
-                <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
-                    <li><strong>National Mental Health Helpline:</strong> 1926 (24/7)</li>
-                    <li><strong>Sumithrayo Sri Lanka:</strong> +94 11 268 6688</li>
-                </ul>
-            </div>
         </div>
-        
-    {% elif result.language_breakdown.sinhala > result.language_breakdown.tamil %}
-        <!-- ===== SINHALA LANGUAGE SUGGESTIONS ===== -->
-        <div style="color: var(--dark); line-height: 1.8;">
-            <!-- Analysis Summary -->
-            <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
-                <p><strong>📊 Sinhala Analysis Summary:</strong></p>
-                <p>ඔබගේ පෙළෙහි <strong>{{ result.language_breakdown.sinhala }}</strong> සිංහල වචන ද, 
-                <strong>{{ result.language_breakdown.tamil }}</strong> දෙමළ වචන ද, 
-                <strong>{{ result.language_breakdown.english }}</strong> ඉංග්‍රීසි වචන ද ඇත.</p>
-            </div>
-
-            <!-- Main Suggestion -->
-            <div style="margin-bottom: 1rem;">
-                <p><strong>💬 General Suggestion:</strong></p>
-                <p>ඔබගේ පෙළ සාර්ථකව විශ්ලේෂණය කර ඇත. මෙම ප්රතිඵල මත පදනම්ව, ඔබගේ මානසික තත්ත්වය පිළිබඳ වැඩිදුර තොරතුරු ලබා ගැනීමට ඔබ කැමති නම්, පහත යෝජනා බලන්න.</p>
-            </div>
-
-            <!-- Healthy Life Advice -->
-            <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem; border-left: 4px solid #4CAF50;">
-                <p><strong>🌿 Healthy Life Advice - සෞඛ්‍ය සම්පන්න ජීවිත උපදෙස්:</strong></p>
-                <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
-                    <li>🧘 <strong>Meditation:</strong> දිනපතා විනාඩි 10ක් භාවනා කරන්න. මෙය ආතතිය අඩු කරයි.</li>
-                    <li>😴 <strong>Sleep:</strong> රාත්‍රියේ පැය 7-8ක් නිදාගන්න. ශරීරයට සහ මනසට විවේකය අවශ්‍යයි.</li>
-                    <li>🥗 <strong>Healthy Food:</strong> පෝෂ්‍යදායී ආහාර අනුභව කරන්න. පලතුරු, එළවළු වැඩිපුර එකතු කරන්න.</li>
-                    <li>🏃 <strong>Exercise:</strong> දිනපතා විනාඩි 30ක් ව්‍යායාම කරන්න. ඇවිදීම, දුවීම, යෝගා වැනි.</li>
-                    <li>💧 <strong>Water:</strong> දිනකට වතුර වීදුරු 8ක් පානය කරන්න. ශරීරය සජලනය කර ගැනීමට.</li>
-                    <li>📖 <strong>Reading:</strong> දිනපතා විනාඩි 15ක් පොතක් කියවන්න. මෙය මනස සන්සුන් කරයි.</li>
-                    <li>👨‍👩‍👦 <strong>Family Time:</strong> පවුලේ අය සමඟ කාලය ගත කරන්න. සබඳතා ශක්තිමත් කිරීමට.</li>
-                </ul>
-            </div>
-
-            <!-- YouTube Video Recommendations - Sinhala (Working Links) -->
-            <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
-                <p><strong>🎥 Recommended Videos - නිර්දේශිත වීඩියෝ:</strong></p>
-                <ul style="padding-left: 1.5rem; margin: 0.5rem 0; list-style: none;">
-                    <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 8px;">
-                        <a href="https://www.youtube.com/watch?v=7M1wv3st0Cw" target="_blank" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="font-size: 1.5rem;">🧘</span>
-                            <span><strong>10 Minute Guided Meditation - Sinhala</strong><br><small>Simple meditation for beginners</small></span>
-                        </a>
-                    </li>
-                    <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 8px;">
-                        <a href="https://www.youtube.com/watch?v=QtKSL_m7bGg" target="_blank" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="font-size: 1.5rem;">🧠</span>
-                            <span><strong>Stress Relief Music - Sinhala</strong><br><small>Calm your mind with relaxing music</small></span>
-                        </a>
-                    </li>
-                    <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 8px;">
-                        <a href="https://www.youtube.com/watch?v=ZuQG08DKnH0" target="_blank" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="font-size: 1.5rem;">💪</span>
-                            <span><strong>Yoga for Anxiety - Sinhala</strong><br><small>Simple yoga for mental health</small></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Quick Actions -->
-            <div style="background: #fff3cd; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
-                <p><strong>⚡ Quick Actions:</strong></p>
-                <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
-                    <li>📝 ඔබගේ පෙළ සිංහලෙන් වැඩිදියුණු කිරීමට අවශ්‍යද?</li>
-                    <li>🔄 ඉංග්‍රීසි පරිවර්තනය බැලීමට අවශ්‍යද?</li>
-                    <li>📊 මානසික තත්ත්ව තක්සේරුවක් ලබා ගැනීමට අවශ්‍යද?</li>
-                </ul>
-            </div>
-
-            <!-- Tip -->
-            <p style="margin-top: 0.5rem; font-size: 0.95rem; color: var(--gray);">
-                <strong>💡 Tip:</strong> "ඔබට මෙම පෙළ සිංහලෙන් හෝ ඉංග්‍රීසියෙන් බැලීමට අවශ්‍යද?"<br>
-                <em>(Would you like to view this text in Sinhala or English?)</em>
-            </p>
-
-            <!-- Mental Health Advice -->
-            <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem; border-left: 4px solid #e91e63;">
-                <p><strong>🧠 Mental Health Advice:</strong></p>
-                <p>ඔබගේ හැඟීම් බෙදාගත්තාට ස්තුතියි. ඔබගේ මානසික තත්ත්වයේ වෙනස්කම් නිරීක්ෂණය කරන්න, අවශ්‍ය නම් වෘත්තීය උපකාර ලබා ගන්න.</p>
-                <p style="margin-top: 0.5rem; color: var(--gray);">
-                    <strong>📌 Next Step:</strong> ඔබගේ පිළිතුරු වඩාත් පැහැදිලි කිරීමට, වෘත්තීය මානසික සෞඛ්‍ය උපදේශකයෙකු සමඟ කතා කිරීමට අපි නිර්දේශ කරමු.
-                </p>
-            </div>
-
-            <!-- Contact Support -->
-            <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem;">
-                <p><strong>📞 Support Helplines:</strong></p>
-                <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
-                    <li><strong>National Mental Health Helpline:</strong> 1926 (24/7)</li>
-                    <li><strong>Sumithrayo Sri Lanka:</strong> +94 11 268 6688</li>
-                </ul>
-            </div>
+        <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem; border-left: 4px solid #4CAF50;">
+            <p><strong>🌿 Healthy Life Advice:</strong></p>
+            <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
+                <li>🧘 தினமும் 10 நிமிடம் தியானம் செய்யவும்</li>
+                <li>😴 இரவில் 7-8 மணி நேரம் தூங்கவும்</li>
+                <li>🥗 சத்தான உணவுகளை உட்கொள்ளவும்</li>
+                <li>🏃 தினமும் 30 நிமிடம் உடற்பயிற்சி செய்யவும்</li>
+                <li>💧 தினமும் 8 கிளாஸ் தண்ணீர் குடிக்கவும்</li>
+            </ul>
         </div>
-        
-    {% else %}
-        <!-- ===== ENGLISH LANGUAGE SUGGESTIONS ===== -->
-        <div style="color: var(--dark); line-height: 1.8;">
-            <!-- Analysis Summary -->
-            <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
-                <p><strong>📊 English Analysis Summary:</strong></p>
-                <p>Your text contains <strong>{{ result.language_breakdown.english }}</strong> English words, 
-                <strong>{{ result.language_breakdown.sinhala }}</strong> Sinhala words, and 
-                <strong>{{ result.language_breakdown.tamil }}</strong> Tamil words.</p>
-            </div>
-
-            <!-- Main Suggestion -->
-            <div style="margin-bottom: 1rem;">
-                <p><strong>💬 General Suggestion:</strong></p>
-                <p>Your text has been successfully analyzed. Based on these results, you may want to review the recommendations below for further insights.</p>
-            </div>
-
-            <!-- Healthy Life Advice -->
-            <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem; border-left: 4px solid #4CAF50;">
-                <p><strong>🌿 Healthy Life Advice:</strong></p>
-                <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
-                    <li>🧘 <strong>Meditation:</strong> Practice 10 minutes of meditation daily. It reduces stress and anxiety.</li>
-                    <li>😴 <strong>Sleep:</strong> Get 7-8 hours of sleep every night. Your body and mind need rest.</li>
-                    <li>🥗 <strong>Healthy Food:</strong> Eat nutritious food. Include more fruits and vegetables in your diet.</li>
-                    <li>🏃 <strong>Exercise:</strong> Exercise for 30 minutes daily. Walking, jogging, or yoga are great options.</li>
-                    <li>💧 <strong>Water:</strong> Drink 8 glasses of water daily. Stay hydrated for better health.</li>
-                    <li>📖 <strong>Reading:</strong> Read for 15 minutes daily. It calms the mind and improves focus.</li>
-                    <li>👨‍👩‍👦 <strong>Family Time:</strong> Spend quality time with family. Strengthen your relationships.</li>
-                </ul>
-            </div>
-
-            <!-- YouTube Video Recommendations - English (Working Links) -->
-            <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
-                <p><strong>🎥 Recommended Videos:</strong></p>
-                <ul style="padding-left: 1.5rem; margin: 0.5rem 0; list-style: none;">
-                    <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 8px;">
-                        <a href="https://www.youtube.com/watch?v=7M1wv3st0Cw" target="_blank" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="font-size: 1.5rem;">🧘</span>
-                            <span><strong>10 Minute Guided Meditation</strong><br><small>Perfect for beginners</small></span>
-                        </a>
-                    </li>
-                    <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 8px;">
-                        <a href="https://www.youtube.com/watch?v=QtKSL_m7bGg" target="_blank" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="font-size: 1.5rem;">🧠</span>
-                            <span><strong>Stress Relief Music</strong><br><small>Calm your mind with relaxing music</small></span>
-                        </a>
-                    </li>
-                    <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 8px;">
-                        <a href="https://www.youtube.com/watch?v=ZuQG08DKnH0" target="_blank" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="font-size: 1.5rem;">💪</span>
-                            <span><strong>Yoga for Anxiety</strong><br><small>Simple yoga for mental health</small></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Quick Actions -->
-            <div style="background: #fff3cd; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
-                <p><strong>⚡ Quick Actions:</strong></p>
-                <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
-                    <li>📝 Would you like to improve your text in English?</li>
-                    <li>🔄 Would you like to see the Sinhala/Tamil translation?</li>
-                    <li>📊 Would you like to get a mental health assessment?</li>
-                </ul>
-            </div>
-
-            <!-- Tip -->
-            <p style="margin-top: 0.5rem; font-size: 0.95rem; color: var(--gray);">
-                <strong>💡 Tip:</strong> "Would you prefer to see the transliteration in your native script, or is this Romanized format acceptable?"<br>
-                <em>Click "Analyze Another Text" to try with different input.</em>
+        <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem; border-left: 4px solid #e91e63;">
+            <p><strong>🧠 Mental Health Advice:</strong></p>
+            <p>உங்கள் உணர்வுகளைப் பகிர்ந்தமைக்கு நன்றி. தேவைப்பட்டால் நிபுணர் உதவியை நாடவும்.</p>
+            <p style="margin-top: 0.5rem; color: var(--gray);">
+                <strong>📌 Next Step:</strong> மருத்துவ நிபுணரிடம் பேச பரிந்துரைக்கிறோம்.
             </p>
-
-            <!-- Mental Health Advice -->
-            <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem; border-left: 4px solid #e91e63;">
-                <p><strong>🧠 Mental Health Advice:</strong></p>
-                <p>Thank you for sharing your feelings. Monitor changes in your mood and seek professional help if needed.</p>
-                <p style="margin-top: 0.5rem; color: var(--gray);">
-                    <strong>📌 Next Step:</strong> We recommend speaking with a mental health professional to further clarify your responses.
-                </p>
-            </div>
-
-            <!-- Contact Support -->
-            <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem;">
-                <p><strong>📞 Support Helplines:</strong></p>
-                <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
-                    <li><strong>National Mental Health Helpline:</strong> 1926 (24/7)</li>
-                    <li><strong>Sumithrayo Sri Lanka:</strong> +94 11 268 6688</li>
-                </ul>
-            </div>
         </div>
-    {% endif %}
+        <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem;">
+            <p><strong>📞 Support Helplines:</strong></p>
+            <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
+                <li><strong>National Mental Health Helpline:</strong> 1926 (24/7)</li>
+                <li><strong>Sumithrayo Sri Lanka:</strong> +94 11 268 6688</li>
+            </ul>
+        </div>
+    </div>
 </div>
 
+{% elif result.language_breakdown.sinhala > result.language_breakdown.tamil %}
+<!-- SINHALA -->
+<div class="suggestion-card sinhala-dominant">
+    <h3 style="color: #e91e63; margin-bottom: 0.5rem;">💡 Suggestions & Recommendations</h3>
+    <div style="color: var(--dark); line-height: 1.8;">
+        <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
+            <p><strong>📊 Sinhala Analysis Summary:</strong></p>
+            <p>ඔබගේ පෙළෙහි <strong>{{ result.language_breakdown.sinhala }}</strong> සිංහල වචන ද,
+                <strong>{{ result.language_breakdown.tamil }}</strong> දෙමළ වචන ද,
+                <strong>{{ result.language_breakdown.english }}</strong> ඉංග්‍රීසි වචන ද ඇත.</p>
+        </div>
+        <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem; border-left: 4px solid #4CAF50;">
+            <p><strong>🌿 Healthy Life Advice:</strong></p>
+            <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
+                <li>🧘 දිනපතා විනාඩි 10ක් භාවනා කරන්න</li>
+                <li>😴 රාත්‍රියේ පැය 7-8ක් නිදාගන්න</li>
+                <li>🥗 පෝෂ්‍යදායී ආහාර අනුභව කරන්න</li>
+                <li>🏃 දිනපතා විනාඩි 30ක් ව්‍යායාම කරන්න</li>
+                <li>💧 දිනකට වතුර වීදුරු 8ක් පානය කරන්න</li>
+            </ul>
+        </div>
+        <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem; border-left: 4px solid #e91e63;">
+            <p><strong>🧠 Mental Health Advice:</strong></p>
+            <p>ඔබගේ හැඟීම් බෙදාගත්තාට ස්තුතියි. අවශ්‍ය නම් වෘත්තීය උපකාර ලබා ගන්න.</p>
+            <p style="margin-top: 0.5rem; color: var(--gray);">
+                <strong>📌 Next Step:</strong> වෘත්තීය මානසික සෞඛ්‍ය උපදේශකයෙකු සමඟ කතා කිරීමට නිර්දේශ කරමු.
+            </p>
+        </div>
+        <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem;">
+            <p><strong>📞 Support Helplines:</strong></p>
+            <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
+                <li><strong>National Mental Health Helpline:</strong> 1926 (24/7)</li>
+                <li><strong>Sumithrayo Sri Lanka:</strong> +94 11 268 6688</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- ENGLISH -->
+<div class="suggestion-card english-dominant">
+    <h3 style="color: #388e3c; margin-bottom: 0.5rem;">💡 Suggestions & Recommendations</h3>
+    <div style="color: var(--dark); line-height: 1.8;">
+        <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
+            <p><strong>📊 English Analysis Summary:</strong></p>
+            <p>Your text contains <strong>{{ result.language_breakdown.english }}</strong> English words,
+                <strong>{{ result.language_breakdown.sinhala }}</strong> Sinhala words, and
+                <strong>{{ result.language_breakdown.tamil }}</strong> Tamil words.</p>
+        </div>
+        <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem; border-left: 4px solid #4CAF50;">
+            <p><strong>🌿 Healthy Life Advice:</strong></p>
+            <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
+                <li>🧘 Practice 10 minutes of meditation daily</li>
+                <li>😴 Get 7-8 hours of sleep every night</li>
+                <li>🥗 Eat nutritious food with fruits and vegetables</li>
+                <li>🏃 Exercise for 30 minutes daily</li>
+                <li>💧 Drink 8 glasses of water daily</li>
+            </ul>
+        </div>
+        <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem; border-left: 4px solid #e91e63;">
+            <p><strong>🧠 Mental Health Advice:</strong></p>
+            <p>Thank you for sharing your feelings. Seek professional help if needed.</p>
+            <p style="margin-top: 0.5rem; color: var(--gray);">
+                <strong>📌 Next Step:</strong> We recommend speaking with a mental health professional.
+            </p>
+        </div>
+        <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem;">
+            <p><strong>📞 Support Helplines:</strong></p>
+            <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
+                <li><strong>National Mental Health Helpline:</strong> 1926 (24/7)</li>
+                <li><strong>Sumithrayo Sri Lanka:</strong> +94 11 268 6688</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <!-- Action Buttons -->
-<div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
-    <a href="/text-analysis" class="btn-primary">🔄 Analyze Another Text</a>
+<div class="action-buttons">
+    <a href="/text-analysis" class="btn-primary">🔄 Refresh / Clear Text</a>
     <a href="/" class="btn-secondary">🏠 Back to Home</a>
 </div>
 
 <script>
     // Animate probability bars on load
     document.addEventListener('DOMContentLoaded', function() {
-        const bars = document.querySelectorAll('.prob-bar');
-        bars.forEach(bar => {
-            const width = bar.style.width;
+        var bars = document.querySelectorAll('.prob-bar');
+        bars.forEach(function(bar) {
+            var width = bar.style.width;
             bar.style.width = '0%';
-            setTimeout(() => {
+            setTimeout(function() {
                 bar.style.width = width;
             }, 300);
         });
     });
 </script>
+
 {% endblock %}

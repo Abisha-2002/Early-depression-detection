@@ -1,105 +1,218 @@
-{% extends "base.html" %}
-{% block title %}Text Analysis - MindAssist{% endblock %}
-{% block content %}
-<div class="card" style="margin-bottom: 2rem; text-align: center; background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);">
-    <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">📝 Code-Mixed Text Analysis</h1>
-    <p style="color: var(--gray); margin-top: 0.5rem; font-size: 1.1rem;">
-        Analyze Sinhala/Tamil/English responses for depression risk detection
-    </p>
-    <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <span style="background: var(--primary); color: white; padding: 0.5rem 1.5rem; border-radius: 50px;">🇱🇰 Sinhala</span>
-        <span style="background: var(--secondary); color: white; padding: 0.5rem 1.5rem; border-radius: 50px;">🇱🇰 Tamil</span>
-        <span style="background: var(--success); color: white; padding: 0.5rem 1.5rem; border-radius: 50px;">🇬🇧 English</span>
-        <span style="background: var(--warning); color: white; padding: 0.5rem 1.5rem; border-radius: 50px;">🔀 Code-Mixed</span>
+{% extends "base.html" %} {% block title %}Text Analysis - MindAssist{% endblock %} {% block content %}
+
+<style>
+    /* Form Styles */
+    
+    .analysis-form {
+        margin-bottom: 2rem;
+        text-align: left;
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--radius);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .analysis-form textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: var(--radius);
+        font-size: 1.1rem;
+        box-sizing: border-box;
+        margin-top: 0.5rem;
+        font-family: inherit;
+    }
+    
+    .analysis-form textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .analysis-form button {
+        margin-top: 1rem;
+        cursor: pointer;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: var(--radius);
+        font-weight: 600;
+        color: white;
+        background: var(--primary);
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+    
+    .analysis-form button:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+    
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .form-group label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+    
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: var(--radius);
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .hero-text {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .hero-text h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+    
+    .hero-text p {
+        color: var(--gray);
+        margin-top: 0.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .lang-badges {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+    
+    .lang-badge {
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        color: white;
+    }
+    
+    .lang-badge.sinhala {
+        background: var(--primary);
+    }
+    
+    .lang-badge.tamil {
+        background: var(--secondary);
+    }
+    
+    .lang-badge.english {
+        background: var(--success);
+    }
+    
+    .lang-badge.mixed {
+        background: #F59E0B;
+    }
+    
+    .how-it-works {
+        margin-top: 2rem;
+        background: var(--light-gray);
+        padding: 1.5rem;
+        border-radius: var(--radius);
+    }
+    
+    .how-it-works h3 {
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+    
+    .how-it-works ul {
+        color: var(--gray);
+        line-height: 2;
+        padding-left: 1.5rem;
+    }
+    
+    @media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        .hero-text h1 {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<!-- ===== HERO SECTION ===== -->
+<div class="hero-text">
+    <h1>📝 Code-Mixed Text Analysis</h1>
+    <p>Analyze Sinhala/Tamil/English responses for depression risk detection</p>
+    <div class="lang-badges">
+        <span class="lang-badge sinhala">🇱🇰 Sinhala</span>
+        <span class="lang-badge tamil">🇱🇰 Tamil</span>
+        <span class="lang-badge english">🇬🇧 English</span>
+        <span class="lang-badge mixed">🔀 Code-Mixed</span>
     </div>
 </div>
 
-<div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--primary);">
-    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">🌍 Language Support</h3>
-    <p style="color: var(--gray);">
-        This tool supports code-mixed text in <strong>Sinhala</strong>, <strong>Tamil</strong>, and <strong>English</strong>. 
-        It detects the language of each token, normalizes Unicode, transliterates to Roman script, and extracts features for ML analysis.
-    </p>
-</div>
+<!-- ===== INPUT FORM ===== -->
+<div class="card analysis-form">
+    <h3 style="color: var(--primary); margin-bottom: 1rem;">✍️ Enter Text to Analyze</h3>
+    <form action="/analyze_text" method="POST">
+        <textarea name="user_text" rows="5" placeholder="Type or paste your Sinhala/Tamil/English text here..." required></textarea>
 
-<div class="card">
-    <form method="POST" action="/analyze_text">
-        <div style="margin-bottom: 1.5rem;">
-            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark);">
-                📝 Enter your response (Sinhala/Tamil/English):
-            </label>
-            <textarea id="user_text" name="user_text" rows="6" 
-                      style="width: 100%; padding: 1rem; border: 2px solid var(--light-gray); border-radius: var(--radius); font-size: 1rem; resize: vertical; transition: var(--transition);"
-                      placeholder="ඔබට හැඟෙන ආකාරය විස්තර කරන්න... (Describe how you feel...)"></textarea>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-            <div>
-                <label style="display: block; font-weight: 500; margin-bottom: 0.25rem; color: var(--dark);">🎂 Age</label>
-                <input type="number" name="age" value="25" min="18" max="100" 
-                       style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: var(--radius); transition: var(--transition); font-size: 1rem;">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" value="25" min="18" max="100">
             </div>
-            <div>
-                <label style="display: block; font-weight: 500; margin-bottom: 0.25rem; color: var(--dark);">👤 Gender</label>
-                <select name="gender" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: var(--radius); font-size: 1rem;">
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender">
                     <option value="0">Prefer not to say</option>
                     <option value="1">Male</option>
                     <option value="2">Female</option>
                 </select>
             </div>
-            <div>
-                <label style="display: block; font-weight: 500; margin-bottom: 0.25rem; color: var(--dark);">🏛️ Institution</label>
-                <select name="institution" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: var(--radius); font-size: 1rem;">
-                    <option value="0">University of Jaffna</option>
-                    <option value="1">University of Eastern</option>
-                    <option value="2">University of Moratuwa</option>
-                    <option value="3">Horizon Campus</option>
-                    <option value="4">Other</option>
+            <div class="form-group">
+                <label for="institution">🏛️ University</label>
+                <select id="institution" name="institution">
+                    <option value="horizon">Horizon Campus</option>
+                    <option value="jaffna">University of Jaffna</option>
+                    <option value="moratuwa">University of Moratuwa</option>
+                    <option value="eastern">University of Eastern</option>
+                    <option value="other">Other</option>
                 </select>
             </div>
-            <div>
-                <label style="display: block; font-weight: 500; margin-bottom: 0.25rem; color: var(--dark);">📚 Year of Study</label>
-                <select name="year" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: var(--radius); font-size: 1rem;">
-                    <option value="1">1st Year</option>
-                    <option value="2">2nd Year</option>
-                    <option value="3">3rd Year</option>
-                    <option value="4">4th Year</option>
-                    <option value="5">Postgraduate</option>
+            <div class="form-group">
+                <label for="year">📚 Year of Study</label>
+                <select id="year" name="year">
+                    <option value="1">First Year</option>
+                    <option value="2">Second Year</option>
+                    <option value="3">Third Year</option>
+                    <option value="4">Fourth Year</option>
+                    <option value="other">Other</option>
                 </select>
             </div>
         </div>
 
-        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; font-size: 1.1rem; padding: 1rem; position: relative;">
-            <span>🔍 Analyze Text for Depression Risk</span>
-        </button>
+        <button type="submit">🔍 Analyze Text</button>
     </form>
 </div>
 
-<div class="card" style="margin-top: 2rem; background: var(--light-gray);">
-    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">💡 How It Works</h3>
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 0.5rem; margin-top: 1rem;">
-        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">📝</div>
-            <div style="font-size: 0.8rem; font-weight: 600;">Text Input</div>
-        </div>
-        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">🌍</div>
-            <div style="font-size: 0.8rem; font-weight: 600;">Language Detection</div>
-        </div>
-        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">🔄</div>
-            <div style="font-size: 0.8rem; font-weight: 600;">Transliteration</div>
-        </div>
-        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">📊</div>
-            <div style="font-size: 0.8rem; font-weight: 600;">Feature Extraction</div>
-        </div>
-        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: var(--radius);">
-            <div style="font-size: 2rem;">🧠</div>
-            <div style="font-size: 0.8rem; font-weight: 600;">ML Prediction</div>
-        </div>
-    </div>
-    <ul style="color: var(--gray); line-height: 2; padding-left: 1.5rem; margin-top: 1rem;">
+<div class="how-it-works">
+    <h3>💡 How It Works</h3>
+    <ul>
         <li>📝 Your text is analyzed using NLP techniques</li>
         <li>🌍 Language detection identifies Sinhala/Tamil/English parts</li>
         <li>🔄 Transliteration converts non-Roman scripts</li>
@@ -108,7 +221,321 @@
     </ul>
 </div>
 
-<div style="margin-top: 1rem; text-align: center; color: var(--gray); font-size: 0.9rem;">
-    <p>🔒 Your responses are confidential and used only for analysis purposes.</p>
+<!-- ===== RESULTS SECTION (Only shown if there are results) ===== -->
+{% if result and result.text_analysis.original != "No text submitted yet." %}
+
+<style>
+    .result-header {
+        text-align: center;
+        background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        border: none;
+        padding: 2rem;
+    }
+    
+    .result-header h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+    
+    .result-header p {
+        color: var(--gray);
+    }
+    
+    .text-block {
+        background: var(--light-gray);
+        padding: 1rem;
+        border-radius: var(--radius);
+    }
+    
+    .text-block p {
+        font-size: 1.1rem;
+    }
+    
+    .lang-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .lang-card {
+        padding: 1rem;
+        border-radius: var(--radius);
+    }
+    
+    .lang-card.sinhala {
+        background: #fce4ec;
+    }
+    
+    .lang-card.tamil {
+        background: #e3f2fd;
+    }
+    
+    .lang-card.english {
+        background: #e8f5e9;
+    }
+    
+    .lang-icon {
+        font-size: 2rem;
+    }
+    
+    .lang-name {
+        font-weight: 600;
+    }
+    
+    .lang-count {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    .lang-count.sinhala {
+        color: #e91e63;
+    }
+    
+    .lang-count.tamil {
+        color: #1976d2;
+    }
+    
+    .lang-count.english {
+        color: #388e3c;
+    }
+    
+    .lang-label {
+        color: var(--gray);
+        font-size: 0.8rem;
+    }
+    
+    .token-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .token-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.25rem 0.5rem;
+        background: var(--light-gray);
+        border-radius: 4px;
+    }
+    
+    .token-text {
+        font-weight: 500;
+    }
+    
+    .token-lang {
+        font-size: 0.8rem;
+    }
+    
+    .token-lang.sinhala {
+        color: #e91e63;
+    }
+    
+    .token-lang.tamil {
+        color: #1976d2;
+    }
+    
+    .token-lang.english {
+        color: #388e3c;
+    }
+    
+    .suggestion-card {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border-radius: var(--radius);
+        border-left: 4px solid;
+    }
+    
+    .suggestion-card.tamil-dominant {
+        background: #e3f2fd;
+        border-color: #1976d2;
+    }
+    
+    .suggestion-card.sinhala-dominant {
+        background: #fce4ec;
+        border-color: #e91e63;
+    }
+    
+    .suggestion-card.english-dominant {
+        background: #e8f5e9;
+        border-color: #388e3c;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+    
+    .monospace {
+        font-family: monospace;
+    }
+    
+    @media (max-width: 768px) {
+        .lang-grid {
+            grid-template-columns: 1fr;
+        }
+        .token-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- RESULTS DISPLAY -->
+<div class="card result-header">
+    <h1>📊 Text Analysis Results</h1>
+    <p>Analysis completed at {{ result.timestamp }}</p>
 </div>
-{% endblock %}
+
+<div class="card">
+    <h3 style="color: var(--primary); margin-bottom: 1rem;">📝 Original Text</h3>
+    <div class="text-block">
+        <p>{{ result.text_analysis.original }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="color: var(--primary); margin-bottom: 1rem;">🔄 Normalized Text</h3>
+    <div class="text-block">
+        <p>{{ result.text_analysis.normalized }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="color: var(--primary); margin-bottom: 1rem;">🌍 Language Breakdown</h3>
+    <div class="lang-grid">
+        <div class="lang-card sinhala">
+            <div class="lang-icon">🇱🇰</div>
+            <div class="lang-name">Sinhala</div>
+            <div class="lang-count sinhala">{{ result.language_breakdown.sinhala }}</div>
+            <div class="lang-label">tokens</div>
+        </div>
+        <div class="lang-card tamil">
+            <div class="lang-icon">🇱🇰</div>
+            <div class="lang-name">Tamil</div>
+            <div class="lang-count tamil">{{ result.language_breakdown.tamil }}</div>
+            <div class="lang-label">tokens</div>
+        </div>
+        <div class="lang-card english">
+            <div class="lang-icon">🇬🇧</div>
+            <div class="lang-name">English</div>
+            <div class="lang-count english">{{ result.language_breakdown.english }}</div>
+            <div class="lang-label">tokens</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="color: var(--primary); margin-bottom: 1rem;">🔤 Token Analysis</h3>
+    <div class="token-grid">
+        {% for token, lang in result.text_analysis.tokens %}
+        <div class="token-item">
+            <span class="token-text">"{{ token }}"</span>
+            <span class="token-lang {{ lang }}">{{ lang }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+<!-- Language-Specific Suggestions -->
+{% if result.language_breakdown.tamil > result.language_breakdown.sinhala %}
+<div class="suggestion-card tamil-dominant">
+    <h3 style="color: #1976d2; margin-bottom: 0.5rem;">💡 Suggestions & Recommendations</h3>
+    <div style="color: var(--dark); line-height: 1.8;">
+        <div style="background: #e3f2fd; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
+            <p><strong>📊 Tamil Analysis Summary:</strong></p>
+            <p>உங்கள் உரையில் <strong>{{ result.language_breakdown.tamil }}</strong> தமிழ் சொற்களும்,
+                <strong>{{ result.language_breakdown.sinhala }}</strong> சிங்கள சொற்களும்,
+                <strong>{{ result.language_breakdown.english }}</strong> ஆங்கில சொற்களும் உள்ளன.</p>
+        </div>
+        <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem; border-left: 4px solid #4CAF50;">
+            <p><strong>🌿 Healthy Life Advice:</strong></p>
+            <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
+                <li>🧘 தினமும் 10 நிமிடம் தியானம் செய்யவும்</li>
+                <li>😴 இரவில் 7-8 மணி நேரம் தூங்கவும்</li>
+                <li>🥗 சத்தான உணவுகளை உட்கொள்ளவும்</li>
+                <li>🏃 தினமும் 30 நிமிடம் உடற்பயிற்சி செய்யவும்</li>
+                <li>💧 தினமும் 8 கிளாஸ் தண்ணீர் குடிக்கவும்</li>
+            </ul>
+        </div>
+        <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem; border-left: 4px solid #e91e63;">
+            <p><strong>🧠 Mental Health Advice:</strong></p>
+            <p>உங்கள் உணர்வுகளைப் பகிர்ந்தமைக்கு நன்றி. தேவைப்பட்டால் நிபுணர் உதவியை நாடவும்.</p>
+            <p style="margin-top: 0.5rem; color: var(--gray);"><strong>📌 Next Step:</strong> மருத்துவ நிபுணரிடம் பேச பரிந்துரைக்கிறோம்.</p>
+        </div>
+    </div>
+</div>
+
+{% elif result.language_breakdown.sinhala > result.language_breakdown.tamil %}
+<div class="suggestion-card sinhala-dominant">
+    <h3 style="color: #e91e63; margin-bottom: 0.5rem;">💡 Suggestions & Recommendations</h3>
+    <div style="color: var(--dark); line-height: 1.8;">
+        <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
+            <p><strong>📊 Sinhala Analysis Summary:</strong></p>
+            <p>ඔබගේ පෙළෙහි <strong>{{ result.language_breakdown.sinhala }}</strong> සිංහල වචන ද,
+                <strong>{{ result.language_breakdown.tamil }}</strong> දෙමළ වචන ද,
+                <strong>{{ result.language_breakdown.english }}</strong> ඉංග්‍රීසි වචන ද ඇත.</p>
+        </div>
+        <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem; border-left: 4px solid #4CAF50;">
+            <p><strong>🌿 Healthy Life Advice:</strong></p>
+            <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
+                <li>🧘 දිනපතා විනාඩි 10ක් භාවනා කරන්න</li>
+                <li>😴 රාත්‍රියේ පැය 7-8ක් නිදාගන්න</li>
+                <li>🥗 පෝෂ්‍යදායී ආහාර අනුභව කරන්න</li>
+                <li>🏃 දිනපතා විනාඩි 30ක් ව්‍යායාම කරන්න</li>
+                <li>💧 දිනකට වතුර වීදුරු 8ක් පානය කරන්න</li>
+            </ul>
+        </div>
+        <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem; border-left: 4px solid #e91e63;">
+            <p><strong>🧠 Mental Health Advice:</strong></p>
+            <p>ඔබගේ හැඟීම් බෙදාගත්තාට ස්තුතියි. අවශ්‍ය නම් වෘත්තීය උපකාර ලබා ගන්න.</p>
+            <p style="margin-top: 0.5rem; color: var(--gray);"><strong>📌 Next Step:</strong> වෘත්තීය මානසික සෞඛ්‍ය උපදේශකයෙකු සමඟ කතා කිරීමට නිර්දේශ කරමු.</p>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="suggestion-card english-dominant">
+    <h3 style="color: #388e3c; margin-bottom: 0.5rem;">💡 Suggestions & Recommendations</h3>
+    <div style="color: var(--dark); line-height: 1.8;">
+        <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem;">
+            <p><strong>📊 English Analysis Summary:</strong></p>
+            <p>Your text contains <strong>{{ result.language_breakdown.english }}</strong> English words,
+                <strong>{{ result.language_breakdown.sinhala }}</strong> Sinhala words, and
+                <strong>{{ result.language_breakdown.tamil }}</strong> Tamil words.</p>
+        </div>
+        <div style="background: #e8f5e9; padding: 0.75rem; border-radius: var(--radius); margin-bottom: 1rem; border-left: 4px solid #4CAF50;">
+            <p><strong>🌿 Healthy Life Advice:</strong></p>
+            <ul style="padding-left: 1.5rem; margin: 0.5rem 0;">
+                <li>🧘 Practice 10 minutes of meditation daily</li>
+                <li>😴 Get 7-8 hours of sleep every night</li>
+                <li>🥗 Eat nutritious food with fruits and vegetables</li>
+                <li>🏃 Exercise for 30 minutes daily</li>
+                <li>💧 Drink 8 glasses of water daily</li>
+            </ul>
+        </div>
+        <div style="background: #fce4ec; padding: 0.75rem; border-radius: var(--radius); margin-top: 1rem; border-left: 4px solid #e91e63;">
+            <p><strong>🧠 Mental Health Advice:</strong></p>
+            <p>Thank you for sharing your feelings. Seek professional help if needed.</p>
+            <p style="margin-top: 0.5rem; color: var(--gray);"><strong>📌 Next Step:</strong> We recommend speaking with a mental health professional.</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Action Buttons -->
+<div class="action-buttons">
+    <a href="/text-analysis" class="btn-primary">🔄 Analyze Another Text</a>
+    <a href="/" class="btn-secondary">🏠 Back to Home</a>
+</div>
+
+{% endif %} {% endblock %}
