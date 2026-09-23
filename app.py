@@ -236,7 +236,6 @@ MODEL_DIR = os.path.join(
     "trained_models"
 )
 
-
 MODEL_FILES = {
     "xgboost": {
         "file": "xgboost_m4.pkl",

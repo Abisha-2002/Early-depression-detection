@@ -169,3 +169,14 @@ logs/
 .DS_Store
 Thumbs.db
 environment.yml
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+.env
+*.log
+.streamlit/
+.ipynb_checkpoints/
+.DS_Store
